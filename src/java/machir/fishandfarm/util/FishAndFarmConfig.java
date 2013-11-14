@@ -1,0 +1,12 @@
+package machir.fishandfarm.util;
+
+public class FishAndFarmConfig {
+
+	public static final int DEFAULT_ID_ITEM_FOOD = 7000;
+	public static final int DEFAULT_ID_ITEM_KNIFE = 7001;
+	public static final int DEFAULT_ID_ITEM_SEEDS = 7002;
+	
+	public static final int DEFAULT_ID_BLOCK_LETTUCE = 2000;
+	public static final int DEFAULT_ID_BLOCK_TOMATO = 2001;
+	public static final int DEFAULT_ID_BLOCK_STRAWBERRY = 2002;
+}
