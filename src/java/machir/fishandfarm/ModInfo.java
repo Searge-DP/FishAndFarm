@@ -3,7 +3,7 @@ package machir.fishandfarm;
 public class ModInfo {
 
 	// current mod version and id
-	public static final String VERSION = "0.0.0";
+	public static final String VERSION = "0.0.1";
 	public static final String MODID = "fishandfarm";
 	
 	// unlocalized names
