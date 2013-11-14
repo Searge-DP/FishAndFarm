@@ -112,6 +112,11 @@ public class FishAndFarm {
 		Localization.addLocalization("/lang/fishandfarm/", "en_US");
 		GameRegistry.registerCraftingHandler(new CraftingHandler());
 		MinecraftForge.EVENT_BUS.register(new BonemealHandler());
+		
+		// Temporary add seeds to grass
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 0), 1);
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 1), 1);
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 2), 1);
 	}
 	
 	@EventHandler
