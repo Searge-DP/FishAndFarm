@@ -1,19 +1,13 @@
 package machir.fishandfarm.proxy;
 
 import machir.fishandfarm.FishAndFarm;
-import machir.fishandfarm.client.gui.GuiStove;
 import machir.fishandfarm.client.renderer.tileentity.TileEntityStoveRenderer;
-import machir.fishandfarm.handler.StoveRenderer;
 import machir.fishandfarm.tileentity.TileEntityStove;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class ClientProxy extends CommonProxy {

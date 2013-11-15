@@ -41,6 +41,8 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
         }
 
         int j = 180;
+        float xOffset = 1.0F;
+        float zOffset = 0.0F;
    
         if (i == 2)
         {
@@ -50,23 +52,29 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
         if (i == 3)
         {
             j = 0;
+            xOffset = 0.0F;
+            zOffset = 1.0F;
         }
 
         if (i == 4)
         {
             j = -90;
+            xOffset = 0.0F;
+            zOffset = 0.0F;
         }
 
         if (i == 5)
         {
             j = 90;
+            xOffset = 1.0F;
+            zOffset = 1.0F;
         }
 
         // Start
         GL11.glPushMatrix();
         
         // Positioning
-        GL11.glTranslatef((float)d + 1.0F, (float)d1 + 1.5F, (float)d2 + 0.0F);
+        GL11.glTranslatef((float)d + xOffset, (float)d1 + 1.5F, (float)d2 + zOffset);
         GL11.glRotatef(j, 0.0F, 1.0F, 0.0F);
         
         if (tileEntityStove.worldObj != null && tileEntityStove.tool != null) {
