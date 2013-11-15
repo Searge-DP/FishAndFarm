@@ -1,4 +1,4 @@
-package machir.fishandfarm.render;
+package machir.fishandfarm.handler;
 
 import machir.fishandfarm.FishAndFarm;
 import machir.fishandfarm.tileentity.TileEntityStove;

@@ -9,8 +9,10 @@ import machir.fishandfarm.block.BlockStrawberryCrop;
 import machir.fishandfarm.block.BlockTomatoCrop;
 import machir.fishandfarm.handler.BonemealHandler;
 import machir.fishandfarm.handler.CraftingHandler;
+import machir.fishandfarm.handler.PacketHandler;
 import machir.fishandfarm.item.ItemCropSeeds;
 import machir.fishandfarm.item.ItemFood;
+import machir.fishandfarm.item.ItemFryingPan;
 import machir.fishandfarm.item.ItemKnife;
 import machir.fishandfarm.proxy.CommonProxy;
 import machir.fishandfarm.tileentity.TileEntityStove;
@@ -31,10 +33,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = ModInfo.MODID, name = "FishAndFarm", version = ModInfo.VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"FishAndFarm"}, packetHandler = PacketHandler.class)
 public class FishAndFarm {
 
 	public static Logger fishAndFarmLog = Logger.getLogger(ModInfo.MODID);
@@ -53,6 +57,7 @@ public class FishAndFarm {
 	public static Item food;
 	public static Item knife;
 	public static Item seeds;
+	public static Item fryingPan;
 	
 	@Instance(ModInfo.MODID)
 	public static FishAndFarm instance;
@@ -111,8 +116,14 @@ public class FishAndFarm {
 			// Stove
 			Property stoveID = fishAndFarmConfig.getBlock("stove.id", FishAndFarmConfig.DEFAULT_ID_BLOCK_STOVE);
 			
-			stove = new BlockStove(stoveID.getInt()).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_STOVE + ".name"); 
+			stove = new BlockStove(stoveID.getInt()).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_STOVE + ".name").setTextureName("stove"); 
 			GameRegistry.registerBlock(stove, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_BLOCK_STOVE);
+			
+			// Frying Pan
+			Property fryingPanID = fishAndFarmConfig.getItem("fryingPan.id", FishAndFarmConfig.DEFAULT_ID_ITEM_FRYINGPAN);
+			
+			fryingPan = new ItemFryingPan(fryingPanID.getInt() - 256).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FRYINGPAN + ".name").setTextureName("fryingPan"); 
+			GameRegistry.registerItem(fryingPan, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_ITEM_FRYINGPAN);
 		
 		} finally {
 			if(fishAndFarmConfig.hasChanged()) {
@@ -128,8 +139,12 @@ public class FishAndFarm {
 		GameRegistry.registerCraftingHandler(new CraftingHandler());
 		GameRegistry.registerTileEntity(TileEntityStove.class, "tileEntityStove");
 		MinecraftForge.EVENT_BUS.register(new BonemealHandler());
+        NetworkRegistry.instance().registerGuiHandler(this, new CommonProxy());
 	
 		CommonProxy.proxy.registerRenders();
+		
+		// Need to find a better way to do this but for now it'll work
+		LanguageRegistry.instance().addStringLocalization(ModInfo.MODID + ".stove.name", "en_US", "Stove");
 	}
 	
 	@EventHandler

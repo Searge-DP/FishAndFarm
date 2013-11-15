@@ -1,7 +1,10 @@
 package machir.fishandfarm.tileentity;
 
 import machir.fishandfarm.ModInfo;
-import machir.fishandfarm.recipes.StoveRecipes;
+import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
+import machir.fishandfarm.item.crafting.EnumStoveToolType;
+import machir.fishandfarm.item.crafting.IStoveTool;
+import machir.fishandfarm.item.crafting.StoveRecipes;
 import machir.fishandfarm.util.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -26,7 +29,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
     public int stoveCookTime;
     
     // Which tool is used
-    public String tool;
+    public StoveToolType tool;
     
     public TileEntityStove()
     {
@@ -38,7 +41,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
         stoveCookTime = 0;
         
         // Default, no tool used
-        tool = "";
+        tool = null;
     }
     
     /**
@@ -137,10 +140,13 @@ public class TileEntityStove extends TileEntity implements IInventory {
                 stoveItemStacks[slot] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
             }
         }
-
+        
         stoveBurnTime = nbttagcompound.getShort("BurnTime");
         stoveCookTime = nbttagcompound.getShort("CookTime");
         currentItemBurnTime = getItemBurnTime(stoveItemStacks[1]);
+        
+        // Get the tool from the nbttagcompound
+        tool = EnumStoveToolType.getToolFromInt(nbttagcompound.getInteger("Tool"));
     }
 
     /**
@@ -163,6 +169,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
             }
         }
         nbttagcompound.setTag("Items", nbttaglist);
+        if (tool != null) nbttagcompound.setInteger("Tool", EnumStoveToolType.getIntFromTool(tool));
     }
 
     /**
@@ -224,12 +231,12 @@ public class TileEntityStove extends TileEntity implements IInventory {
         // If a tool was used, update the tool string
         if(stoveItemStacks[0] != null)
         {
-
+        	this.tool = (stoveItemStacks[0].getItem() instanceof IStoveTool ? ((IStoveTool)stoveItemStacks[0].getItem()).getToolType() : null);
         }
         // No tool was used, empty the tool string
         else
         {
-        	tool = "";
+        	this.tool = null;
         }
         
         if(!worldObj.isRemote)

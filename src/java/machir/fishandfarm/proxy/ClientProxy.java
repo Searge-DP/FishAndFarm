@@ -1,11 +1,15 @@
 package machir.fishandfarm.proxy;
 
-import machir.fishandfarm.render.StoveRenderer;
+import machir.fishandfarm.client.gui.GuiStove;
+import machir.fishandfarm.client.renderer.tileentity.TileEntityStoveRenderer;
+import machir.fishandfarm.handler.StoveRenderer;
 import machir.fishandfarm.tileentity.TileEntityStove;
-import machir.fishandfarm.tileentityspecialrender.TileEntityStoveRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -40,5 +44,4 @@ public class ClientProxy extends CommonProxy {
 
 		return Item.itemsList[stack.itemID].getItemDisplayName(stack);
 	}
-	
 }

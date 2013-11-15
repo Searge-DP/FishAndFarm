@@ -2,30 +2,25 @@ package machir.fishandfarm.block;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import machir.fishandfarm.FishAndFarm;
 import machir.fishandfarm.ModInfo;
+import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
 import machir.fishandfarm.tileentity.TileEntityStove;
-import machir.fishandfarm.util.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockStove extends BlockContainer {
     /**
@@ -36,6 +31,7 @@ public class BlockStove extends BlockContainer {
     public BlockStove(int id)
     {
         super(id, Material.iron);
+        this.setHardness(0.75F);
         stoveRand = new Random();
         setBlockBounds(0.062f, 0.0f, 0.062f, 0.938f, 0.625f, 0.938f);
         setCreativeTab(CreativeTabs.tabDecorations);
@@ -152,6 +148,7 @@ public class BlockStove extends BlockContainer {
      * @param hitY The y coordinate where the pointer hit
      * @param hitZ The z coordinate where the pointer hit
      */
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
     	TileEntityStove tileentitystove = (TileEntityStove)world.getBlockTileEntity(x, y, z);
@@ -161,10 +158,51 @@ public class BlockStove extends BlockContainer {
         {
             if(!world.isRemote)
             {
-            	//entityPlayer.openGui(FishAndFarm.instance, 0, world, x, y, z);
+            	entityPlayer.openGui(FishAndFarm.instance, 0, world, x, y, z);
             }
         }
         return true;
+    }
+
+    /**
+     * A randomly called display update to be able to add particles or other items for display
+     */
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(World world, int x, int y, int z, Random random)
+    {
+    	TileEntityStove tileEntityStove = (TileEntityStove)world.getBlockTileEntity(x, y, z);
+    	
+    	if (tileEntityStove != null)
+	        if (tileEntityStove.tool != null && tileEntityStove.stoveBurnTime > 0)
+	        {
+	            int metadata = world.getBlockMetadata(x, y, z);
+	            float particleX = (float)x + 0.5F;
+	            float particleY = (float)y + 0.6F + random.nextFloat() / 6.0F;
+	            float particleZ = (float)z + 0.5F;
+	            float particleOffsetCenter = (tileEntityStove.tool == StoveToolType.FRYINGPAN ? 0.1F + (random.nextFloat() * 2.5F / 20.0F) : -0.1F + (random.nextFloat() * 2.5F / 20.0F));
+	            float particleOffsetFront = random.nextFloat() * 3.5F / 10.0F;
+	
+	            if (metadata == 4)
+	            {
+	            	world.spawnParticle("smoke", (double)(particleX - particleOffsetCenter), (double)particleY + 0.3F, (double)(particleZ + particleOffsetFront), 0.0D, 0.0D, 0.0D);
+	            	world.spawnParticle("flame", (double)(particleX - particleOffsetCenter), (double)particleY, (double)(particleZ + particleOffsetFront), 0.0D, 0.0D, 0.0D);
+	            }
+	            else if (metadata == 5)
+	            {
+	            	world.spawnParticle("smoke", (double)(particleX + particleOffsetCenter), (double)particleY + 0.3F, (double)(particleZ - particleOffsetFront), 0.0D, 0.0D, 0.0D);
+	            	world.spawnParticle("flame", (double)(particleX + particleOffsetCenter), (double)particleY, (double)(particleZ - particleOffsetFront), 0.0D, 0.0D, 0.0D);
+	            }
+	            else if (metadata == 2)
+	            {
+	            	world.spawnParticle("smoke", (double)(particleX - particleOffsetFront), (double)particleY + 0.3F, (double)(particleZ - particleOffsetCenter), 0.0D, 0.0D, 0.0D);
+	                world.spawnParticle("flame", (double)(particleX - particleOffsetFront), (double)particleY, (double)(particleZ - particleOffsetCenter), 0.0D, 0.0D, 0.0D);
+	            }
+	            else if (metadata == 3)
+	            {
+	            	world.spawnParticle("smoke", (double)(particleX + particleOffsetFront), (double)particleY + 0.3F, (double)(particleZ + particleOffsetCenter), 0.0D, 0.0D, 0.0D);
+	            	world.spawnParticle("flame", (double)(particleX + particleOffsetFront), (double)particleY, (double)(particleZ + particleOffsetCenter), 0.0D, 0.0D, 0.0D);
+	            }
+	        }
     }
 
     /**
@@ -318,18 +356,6 @@ public class BlockStove extends BlockContainer {
             return MathHelper.floor_float(outputStrength * 14.0F) + (filledSlots > 0 ? 1 : 0);
         }
     }
-    
-	/**
-     * When this method is called, your block should register all the icons it needs with the given IconRegister. This
-     * is the only chance you get to register icons.
-	 * 
-	 * @param register An object implementing IconRegister
-	 */
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister register) {
-		// Removed inherited content to prevent iconRegistry
-	}	
 	
 	/**
 	 * Returns the unlocalized name
