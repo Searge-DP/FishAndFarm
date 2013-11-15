@@ -38,7 +38,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = ModInfo.MODID, name = "FishAndFarm", version = ModInfo.VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"FishAndFarm"}, packetHandler = PacketHandler.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = { "FishAndFarm" }, packetHandler = PacketHandler.class)
 public class FishAndFarm {
 
 	public static Logger fishAndFarmLog = Logger.getLogger(ModInfo.MODID);

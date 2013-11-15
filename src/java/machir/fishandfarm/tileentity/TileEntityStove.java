@@ -1,8 +1,13 @@
 package machir.fishandfarm.tileentity;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 import machir.fishandfarm.ModInfo;
-import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
 import machir.fishandfarm.item.crafting.EnumStoveToolType;
+import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
 import machir.fishandfarm.item.crafting.IStoveTool;
 import machir.fishandfarm.item.crafting.StoveRecipes;
 import machir.fishandfarm.util.Localization;
@@ -15,6 +20,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -488,6 +496,37 @@ public class TileEntityStove extends TileEntity implements IInventory {
         }
 
         return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
+    }
+    
+    /**
+     * Called when you receive a TileEntityData packet for the location this
+     * TileEntity is currently in. On the client, the NetworkManager will always
+     * be the remote server. On the server, it will be whomever is responsible for
+     * sending the packet.
+     *
+     * @param net The NetworkManager the packet originated from
+     * @param packet The data packet
+     */
+    @Override
+    public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+    {
+    	this.tool = EnumStoveToolType.getToolFromInt(packet.data.getInteger("Tool"));
+    	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    /**
+     * Overriden in a sign to provide the text.
+     */
+    @Override
+    public Packet getDescriptionPacket()
+    {
+    	if (this.tool != null) {
+	    	Packet132TileEntityData packet = new Packet132TileEntityData();
+	    	packet.data = new NBTTagCompound();
+	    	packet.data.setInteger("Tool", tool.ordinal());
+	        return packet;
+    	}
+    	return null;
     }
     
     /**
