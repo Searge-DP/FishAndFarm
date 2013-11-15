@@ -27,9 +27,9 @@ public class ItemFishAndFarm extends Item {
      */
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List desc, boolean adv) {
-    	if (!Localization.get("fishandfarm." + this.getIconString() + ".desc").equals(
-    			"fishandfarm." + this.getIconString() + ".desc")) {
-    		String[] lines = Localization.get("fishandfarm." + this.getIconString() + ".desc").split("\n");
+    	if (!Localization.get(ModInfo.MODID + "." + this.getIconString() + ".desc").equals(
+    			ModInfo.MODID + "." + this.getIconString() + ".desc")) {
+    		String[] lines = Localization.get(ModInfo.MODID + "." + this.getIconString() + ".desc").split("\n");
     		for (String line : lines) {
     			desc.add(line);
     		}
@@ -51,20 +51,20 @@ public class ItemFishAndFarm extends Item {
 	/**
 	 * Returns the unlocalized name
 	 * 
-	 * @param itemstack The corresponding itemstack
+	 * @param itemStack The corresponding itemstack
 	 */
 	@Override
-	public String getUnlocalizedName(ItemStack itemstack) {
+	public String getUnlocalizedName(ItemStack itemStack) {
 		return Localization.get(ModInfo.MODID + "." + this.getIconString() + ".name");
 	}
 	
 	/**
 	 * Returns the item name for display
 	 * 
-	 * @param itemstack The corresponding itemstack
+	 * @param itemStack The corresponding itemstack
 	 */
 	@Override
-	public String getItemDisplayName(ItemStack itemstack) {
-		return Localization.get(getUnlocalizedName(itemstack));
+	public String getItemDisplayName(ItemStack itemStack) {
+		return Localization.get(getUnlocalizedName(itemStack));
 	}
 }

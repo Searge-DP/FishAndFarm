@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import machir.fishandfarm.block.BlockLettuceCrop;
+import machir.fishandfarm.block.BlockStove;
 import machir.fishandfarm.block.BlockStrawberryCrop;
 import machir.fishandfarm.block.BlockTomatoCrop;
 import machir.fishandfarm.handler.BonemealHandler;
@@ -11,6 +12,8 @@ import machir.fishandfarm.handler.CraftingHandler;
 import machir.fishandfarm.item.ItemCropSeeds;
 import machir.fishandfarm.item.ItemFood;
 import machir.fishandfarm.item.ItemKnife;
+import machir.fishandfarm.proxy.CommonProxy;
+import machir.fishandfarm.tileentity.TileEntityStove;
 import machir.fishandfarm.util.FishAndFarmConfig;
 import machir.fishandfarm.util.Localization;
 import net.minecraft.block.Block;
@@ -19,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -36,10 +40,14 @@ public class FishAndFarm {
 	public static Logger fishAndFarmLog = Logger.getLogger(ModInfo.MODID);
 	public static Configuration fishAndFarmConfig;
 	
+	// Render ID's
+	public static int stoveRenderID = RenderingRegistry.getNextAvailableRenderId();
+	
 	// Blocks
 	public static Block lettuceCrop;
 	public static Block tomatoCrop;
 	public static Block strawberryCrop;
+	public static Block stove;
 	
 	// Items
 	public static Item food;
@@ -99,6 +107,13 @@ public class FishAndFarm {
 			GameRegistry.addShapelessRecipe(new ItemStack(seeds, 1, 0), new Object[]{ new ItemStack(food, 1, 2) });
 			GameRegistry.addShapelessRecipe(new ItemStack(seeds, 1, 1), new Object[]{ new ItemStack(food, 1, 3) });
 			GameRegistry.addShapelessRecipe(new ItemStack(seeds, 1, 2), new Object[]{ new ItemStack(food, 1, 4) });
+			
+			// Stove
+			Property stoveID = fishAndFarmConfig.getBlock("stove.id", FishAndFarmConfig.DEFAULT_ID_BLOCK_STOVE);
+			
+			stove = new BlockStove(stoveID.getInt()).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_STOVE + ".name"); 
+			GameRegistry.registerBlock(stove, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_BLOCK_STOVE);
+		
 		} finally {
 			if(fishAndFarmConfig.hasChanged()) {
 				fishAndFarmConfig.save();
@@ -111,7 +126,10 @@ public class FishAndFarm {
 		// set up the mod
 		Localization.addLocalization("/lang/fishandfarm/", "en_US");
 		GameRegistry.registerCraftingHandler(new CraftingHandler());
+		GameRegistry.registerTileEntity(TileEntityStove.class, "tileEntityStove");
 		MinecraftForge.EVENT_BUS.register(new BonemealHandler());
+	
+		CommonProxy.proxy.registerRenders();
 	}
 	
 	@EventHandler
