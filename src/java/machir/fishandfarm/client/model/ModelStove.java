@@ -16,8 +16,8 @@ public class ModelStove extends ModelBase
     
     	StoveBox = new ModelRenderer(this, 0, 0);
     	StoveBox.addBox(-7F, 0F, -7F, 14, 10, 14);
-    	StoveBox.setRotationPoint(0F, 14F, 0F);
-    	StoveBox.setTextureSize(64, 32);
+    	StoveBox.setRotationPoint(-8F, 14F, -8F);
+    	StoveBox.setTextureSize(textureWidth, textureHeight);
     	StoveBox.mirror = true;
     	setRotation(StoveBox, 0F, 0F, 0F);
     }

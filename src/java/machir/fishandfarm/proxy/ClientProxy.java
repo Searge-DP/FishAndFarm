@@ -1,5 +1,6 @@
 package machir.fishandfarm.proxy;
 
+import machir.fishandfarm.FishAndFarm;
 import machir.fishandfarm.client.gui.GuiStove;
 import machir.fishandfarm.client.renderer.tileentity.TileEntityStoveRenderer;
 import machir.fishandfarm.handler.StoveRenderer;
@@ -10,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -19,7 +21,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenders() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStove.class, new TileEntityStoveRenderer());
-		RenderingRegistry.registerBlockHandler(new StoveRenderer());
+		MinecraftForgeClient.registerItemRenderer(FishAndFarm.stove.blockID, new TileEntityStoveRenderer());
 	}
 	
 	@Override

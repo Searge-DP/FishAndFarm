@@ -8,11 +8,15 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-public class TileEntityStoveRenderer extends TileEntitySpecialRenderer {
+import cpw.mods.fml.client.FMLClientHandler;
+
+public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implements IItemRenderer {
 	private ModelStove stove;
 	private ModelFryingPan fryingPan;
 
@@ -62,7 +66,7 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         
         // Positioning
-        GL11.glTranslatef((float)d + 0.5F, (float)d1 + 1.5F, (float)d2 + 0.5F);
+        GL11.glTranslatef((float)d + 1.0F, (float)d1 + 1.5F, (float)d2 + 0.0F);
         GL11.glRotatef(j, 0.0F, 1.0F, 0.0F);
         
         if (tileEntityStove.worldObj != null && tileEntityStove.tool != null) {
@@ -84,7 +88,7 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer {
     		}
         } else {
         	// Set texture
-            this.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
+        	this.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
             renderStove();
         }
         
@@ -123,5 +127,100 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer {
     {
         renderModelAt((TileEntityStove)tileentity, d, d1, d2, f);
     }
+
+	@Override
+	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
+		return true;
+	}
+
+	@Override
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
+			ItemRendererHelper helper) {
+		return true;
+	}
+
+	@Override
+	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+		switch(type) {
+		case ENTITY:
+	        // Start
+	        GL11.glPushMatrix();
+	        
+	        // Positioning
+	        GL11.glTranslatef(-0.5F, 1.0F, 0.5F);
+	        
+	        // Set the texture
+	        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
+	        
+	        // Start the model render
+	        GL11.glPushMatrix();
+	        
+	        // Rotation
+	        GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+	        
+	        // Render the stove
+			renderStove();
+			
+			// Stop the model render
+			GL11.glPopMatrix();
+			
+			// Stop
+			GL11.glPopMatrix();
+			break;
+		case EQUIPPED:
+			// Start
+	        GL11.glPushMatrix();
+	        
+	        // Positioning
+	        GL11.glTranslatef(-0.0F, 1.5F, 1.0F);
+	        
+	        // Set the texture
+	        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
+	        
+	        // Start the model render
+	        GL11.glPushMatrix();
+	        
+	        // Rotation
+	        GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+	        
+	        // Render the stove
+			renderStove();
+			
+			// Stop the model render
+			GL11.glPopMatrix();
+			
+			// Stop
+			GL11.glPopMatrix();
+			break;
+		case INVENTORY:
+			// Start
+	        GL11.glPushMatrix();
+	        
+	        // Positioning
+	        GL11.glTranslatef(-3.0F, -1.0F, -2.0F);
+	        
+	        // Set the texture
+	        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
+	        
+	        // Start the model render
+	        GL11.glPushMatrix();
+	        
+	        // Rotation
+	        GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+	        
+	        // Render the stove
+			renderStove();
+			
+			// Stop the model render
+			GL11.glPopMatrix();
+			
+			// Stop
+			GL11.glPopMatrix();
+			break;
+		default:
+			break;
+		}
+		
+	}
 }
 
