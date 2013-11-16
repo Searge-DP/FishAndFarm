@@ -14,7 +14,11 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
@@ -22,6 +26,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -149,7 +154,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
                 
         stoveBurnTime = nbttagcompound.getShort("BurnTime");
         stoveCookTime = nbttagcompound.getShort("CookTime");
-        currentItemBurnTime = getItemBurnTime(stoveItemStacks[1]);
+        currentItemBurnTime = nbttagcompound.getShort("ItemBurnTime");
         
         // Get the tool from the nbttagcompound
         tool = EnumStoveToolType.getToolFromInt(nbttagcompound.getInteger("Tool"));
@@ -163,6 +168,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.setShort("BurnTime", (short)stoveBurnTime);
         nbttagcompound.setShort("CookTime", (short)stoveCookTime);
+        nbttagcompound.setShort("ItemBurnTime", (short)currentItemBurnTime);
         NBTTagList nbttaglist = new NBTTagList();
         for(int slot = 0; slot < stoveItemStacks.length; slot++)
         {
@@ -208,7 +214,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
         {
             currentItemBurnTime = 200;
         }
-        return (stoveBurnTime * i) / currentItemBurnTime;
+        return stoveBurnTime * i / currentItemBurnTime;
     }
 
     /**
@@ -468,53 +474,40 @@ public class TileEntityStove extends TileEntity implements IInventory {
         {
             return 0;
         }
-        int i = itemstack.getItem().itemID;
-        // Anything of material wood, return 300
-        if(i < Block.blocksList.length && Block.blocksList[i].blockMaterial == Material.wood)
-        {
-            return 300;
-        }
-        
-        // A stick, return 100
-        if(i == Item.stick.itemID)
-        {
-            return 100;
-        }
-        
-        // A log, return 1600
-        if(i == Block.wood.blockID)
-        {
-            return 1600;
-        }
-        
-        // Coal, return 1600
-        if(i == Item.coal.itemID)
-        {
-            return 1600;
-        }
-        
-        // A bucket of lava, return 20000
-        if(i == Item.bucketLava.itemID)
-        {
-            return 20000;
-        }
-        
-        // A sapling, return 100
-        if(i == Block.sapling.blockID)
-        {
-            return 100;
-        }
-        
-        // A blaze rod, return 2400
-        if (i == Item.blazeRod.itemID)
-        {
-            return 2400;
-        }
-        
-        // If it's none of the above, return 0
         else
         {
-        	return 0;
+            int i = itemstack.getItem().itemID;
+            Item item = itemstack.getItem();
+
+            if (itemstack.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
+            {
+                Block block = Block.blocksList[i];
+
+                if (block == Block.woodSingleSlab)
+                {
+                    return 150;
+                }
+
+                if (block.blockMaterial == Material.wood)
+                {
+                    return 300;
+                }
+
+                if (block == Block.coalBlock)
+                {
+                    return 16000;
+                }
+            }
+
+            if (item instanceof ItemTool && ((ItemTool) item).getToolMaterialName().equals("WOOD")) return 200;
+            if (item instanceof ItemSword && ((ItemSword) item).getToolMaterialName().equals("WOOD")) return 200;
+            if (item instanceof ItemHoe && ((ItemHoe) item).getMaterialName().equals("WOOD")) return 200;
+            if (i == Item.stick.itemID) return 100;
+            if (i == Item.coal.itemID) return 1600;
+            if (i == Item.bucketLava.itemID) return 20000;
+            if (i == Block.sapling.blockID) return 100;
+            if (i == Item.blazeRod.itemID) return 2400;
+            return GameRegistry.getFuelValue(itemstack);
         }
     }
 
