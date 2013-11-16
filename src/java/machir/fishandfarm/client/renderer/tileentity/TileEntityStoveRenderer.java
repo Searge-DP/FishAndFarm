@@ -76,27 +76,21 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
         // Positioning
         GL11.glTranslatef((float)d + xOffset, (float)d1 + 1.5F, (float)d2 + zOffset);
         GL11.glRotatef(j, 0.0F, 1.0F, 0.0F);
+
+        // Render the stove
+        renderStove();
         
         if (tileEntityStove.worldObj != null && tileEntityStove.tool != null) {
     		switch (tileEntityStove.tool) {
     		case FRYINGPAN:
-    	        // Set texture
-    	        this.bindTexture(ModInfo.FRYINGPAN_MODEL_TEXTURE);
-    	        
-    	        // Render the stove
-                renderStove();
-    	        
                 // Render the fryingPan
                 renderFryingPan();
-                
 				break;
 				
     			default: 
 				break;
     		}
         } else {
-        	// Set texture
-        	this.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
             renderStove();
         }
         
@@ -110,7 +104,10 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
     }
     
     public void renderStove() {
-        // Start for rotation and rendering stove
+    	// Set texture
+        this.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
+    	
+    	// Start for rotation and rendering stove
         GL11.glPushMatrix();
         GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 	    stove.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
@@ -120,7 +117,10 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
     }
     
     public void renderFryingPan() {
-        // Start for rotation and rendering frying pan
+    	// Set texture
+        this.bindTexture(ModInfo.FRYINGPAN_MODEL_TEXTURE);
+    	
+    	// Start for rotation and rendering frying pan
         GL11.glPushMatrix();
         GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
         

@@ -6,6 +6,7 @@ import machir.fishandfarm.item.crafting.EnumStoveToolType;
 import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
 import machir.fishandfarm.item.crafting.IStoveTool;
 import machir.fishandfarm.item.crafting.StoveRecipes;
+import machir.fishandfarm.packet.StovePacket;
 import machir.fishandfarm.util.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -301,16 +302,25 @@ public class TileEntityStove extends TileEntity implements IInventory {
                 changedActivity = true;
             }
         }
-        if(!worldObj.isRemote && changedActivity)
+        if(changedActivity)
         {
-        	//PacketDispatcher.sendPacketToAllAround(this.xCoord, this.yCoord, this.zCoord, 64, 0, PacketHandler.createNewStovePacket(this));
             onInventoryChanged();
         }
     }
     
+    @Override
+    public void onInventoryChanged() {
+    	super.onInventoryChanged();
+    	sendPacket();
+    }
+    
     public void sendPacket() {
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
+		this.writeToNBT(nbttagcompound);
     	if (this.worldObj.isRemote) {
-    		PacketDispatcher.sendPacketToServer(PacketHandler.createNewStovePacket(this));
+    		PacketDispatcher.sendPacketToServer(new StovePacket(nbttagcompound).makePacket());
+    	} else {
+    		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 16, 0, new StovePacket(nbttagcompound).makePacket());
     	}
     }
 

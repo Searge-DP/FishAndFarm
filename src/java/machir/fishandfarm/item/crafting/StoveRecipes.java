@@ -9,7 +9,7 @@ public class StoveRecipes {
     {
 		if(itemstack.itemID == FishAndFarm.fryingPan.itemID && itemstack2.itemID == Item.egg.itemID)
         {
-            return new ItemStack(FishAndFarm.food, 1, 1);
+            return new ItemStack(FishAndFarm.food, 1, 0);
         }
 		if(itemstack.itemID == FishAndFarm.fryingPan.itemID && itemstack2.itemID == Item.fishRaw.itemID)
         {

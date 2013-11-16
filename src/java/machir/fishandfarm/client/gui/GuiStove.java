@@ -2,13 +2,16 @@ package machir.fishandfarm.client.gui;
 
 import machir.fishandfarm.ModInfo;
 import machir.fishandfarm.inventory.container.ContainerStove;
+import machir.fishandfarm.packet.StovePacket;
 import machir.fishandfarm.tileentity.TileEntityStove;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -64,6 +67,6 @@ public class GuiStove extends GuiContainer
     protected void mouseClicked(int x, int y, int mouseButton)
     {
     	super.mouseClicked(x, y, mouseButton);
-    	stoveInventory.sendPacket();
+    	//stoveInventory.sendPacket();
     }
 }
