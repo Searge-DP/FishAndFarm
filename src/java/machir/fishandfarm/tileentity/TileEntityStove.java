@@ -1,11 +1,7 @@
 package machir.fishandfarm.tileentity;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
 import machir.fishandfarm.ModInfo;
+import machir.fishandfarm.handler.PacketHandler;
 import machir.fishandfarm.item.crafting.EnumStoveToolType;
 import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
 import machir.fishandfarm.item.crafting.IStoveTool;
@@ -24,6 +20,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -148,7 +145,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
                 stoveItemStacks[slot] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
             }
         }
-        
+                
         stoveBurnTime = nbttagcompound.getShort("BurnTime");
         stoveCookTime = nbttagcompound.getShort("CookTime");
         currentItemBurnTime = getItemBurnTime(stoveItemStacks[1]);
@@ -230,7 +227,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
         boolean burning = stoveBurnTime > 0;
         boolean changedActivity = false;
         
-        // If it's burning, descrease the burn time left
+        // If it's burning, decrease the burn time left
         if(stoveBurnTime > 0)
         {
             stoveBurnTime--;
@@ -304,10 +301,17 @@ public class TileEntityStove extends TileEntity implements IInventory {
                 changedActivity = true;
             }
         }
-        if(changedActivity)
+        if(!worldObj.isRemote && changedActivity)
         {
+        	//PacketDispatcher.sendPacketToAllAround(this.xCoord, this.yCoord, this.zCoord, 64, 0, PacketHandler.createNewStovePacket(this));
             onInventoryChanged();
         }
+    }
+    
+    public void sendPacket() {
+    	if (this.worldObj.isRemote) {
+    		PacketDispatcher.sendPacketToServer(PacketHandler.createNewStovePacket(this));
+    	}
     }
 
     /**
@@ -510,8 +514,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
     @Override
     public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
     {
-    	this.tool = EnumStoveToolType.getToolFromInt(packet.data.getInteger("Tool"));
-    	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    	this.readFromNBT(packet.data);
     }
     
     /**
@@ -520,13 +523,9 @@ public class TileEntityStove extends TileEntity implements IInventory {
     @Override
     public Packet getDescriptionPacket()
     {
-    	if (this.tool != null) {
-	    	Packet132TileEntityData packet = new Packet132TileEntityData();
-	    	packet.data = new NBTTagCompound();
-	    	packet.data.setInteger("Tool", tool.ordinal());
-	        return packet;
-    	}
-    	return null;
+    	NBTTagCompound nbttagcompound = new NBTTagCompound();
+        this.writeToNBT(nbttagcompound);
+        return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, -1, nbttagcompound);
     }
     
     /**

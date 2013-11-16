@@ -57,4 +57,13 @@ public class GuiStove extends GuiContainer
         i1 = this.stoveInventory.getCookProgressScaled(24);
         this.drawTexturedModalRect(k + 79, l + 34, 176, 14, i1 + 1, 16);
     }
+    
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int x, int y, int mouseButton)
+    {
+    	super.mouseClicked(x, y, mouseButton);
+    	stoveInventory.sendPacket();
+    }
 }

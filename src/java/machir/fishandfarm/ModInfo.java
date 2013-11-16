@@ -7,6 +7,7 @@ public class ModInfo {
 	// current mod version and id
 	public static final String VERSION = "0.0.2";
 	public static final String MODID = "fishandfarm";
+	public static final String CHANNEL = "FishAndFarm";
 	
 	// unlocalized names
 	public static final String UNLOC_NAME_ITEM_FOOD = "food";
