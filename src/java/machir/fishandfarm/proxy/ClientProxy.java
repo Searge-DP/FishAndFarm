@@ -1,17 +1,21 @@
 package machir.fishandfarm.proxy;
 
+import machir.fishandfarm.FishAndFarm;
+import machir.fishandfarm.client.renderer.tileentity.TileEntityStoveRenderer;
+import machir.fishandfarm.tileentity.TileEntityStove;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelOcelot;
-import net.minecraft.client.renderer.entity.RenderOcelot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.client.MinecraftForgeClient;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerRenders() {
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStove.class, new TileEntityStoveRenderer());
+		MinecraftForgeClient.registerItemRenderer(FishAndFarm.stove.blockID, new TileEntityStoveRenderer());
 	}
 	
 	@Override
@@ -36,5 +40,4 @@ public class ClientProxy extends CommonProxy {
 
 		return Item.itemsList[stack.itemID].getItemDisplayName(stack);
 	}
-	
 }

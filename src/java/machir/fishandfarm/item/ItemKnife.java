@@ -9,14 +9,12 @@ import net.minecraft.item.ItemStack;
 
 import com.google.common.collect.Multimap;
 
-public class ItemKnife extends ItemFishAndFarm {
+public class ItemKnife extends ItemDamagable {
 	// Max 30 uses, -1 to destroy on damage 30
-	private int maxUses = (30 - 1); 
+	private static int maxUses = (30 - 1); 
 	
 	public ItemKnife(int id) {
-		super(id);
-		this.maxStackSize = 1;
-		this.setMaxDamage(this.maxUses);
+		super(id, maxUses);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.bFull3D = true;
 	}

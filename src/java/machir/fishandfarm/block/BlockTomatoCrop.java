@@ -34,7 +34,7 @@ public class BlockTomatoCrop extends BlockCrop {
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
     {
     	// A list of dropped items
-        ArrayList<ItemStack> items = super.getBlockDropped(world, x, y, z, metadata, fortune);
+        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 
         // If the crop is on it's last stage drop seeds
         if (metadata >= this.maxGrowthStage)
