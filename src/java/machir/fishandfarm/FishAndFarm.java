@@ -79,7 +79,6 @@ public class FishAndFarm {
 			
 			food = new ItemFood(foodID.getInt() - 256).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FOOD + ".name"); 
 			GameRegistry.registerItem(food, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_ITEM_FOOD);
-			GameRegistry.addSmelting(Item.egg.itemID, new ItemStack(food, 1, 0), 0.0f);
 			GameRegistry.addShapelessRecipe(new ItemStack(food, 4, 1), new Object[]{Item.bread, new ItemStack(knife.itemID, 1, Short.MAX_VALUE)});
 			GameRegistry.addRecipe(new ItemStack(food, 1, 5), new Object[]{ "S", "E", "B", 'B', new ItemStack(food, 2, 1), 'E', new ItemStack(food, 1, 0), 'S', Item.porkCooked});
 			
