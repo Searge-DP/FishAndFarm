@@ -143,6 +143,11 @@ public class FishAndFarm {
 		
 		// Need to find a better way to do this but for now it'll work
 		LanguageRegistry.instance().addStringLocalization(ModInfo.MODID + ".stove.name", "en_US", "Stove");
+		
+		// Temporary add seeds to grass
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 0), 1);
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 1), 1);
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 2), 1);
 	}
 	
 	@EventHandler
