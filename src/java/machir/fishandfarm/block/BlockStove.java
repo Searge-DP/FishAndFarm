@@ -59,7 +59,7 @@ public class BlockStove extends BlockContainer {
      */
     public int getRenderType()
     {
-        return FishAndFarm.stoveRenderID;
+        return -1;
     }
     
     /**
@@ -245,9 +245,11 @@ public class BlockStove extends BlockContainer {
      * @param x coordinate
      * @param y coordinate
      * @param z coordinate
+     * @param blockID The old bockID
      * @param metadata The block metadata
      */
-    public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int metadata)
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int blockID, int metadata)
     {
     	// Check if the tile entity exists
         TileEntityStove tileentity = (TileEntityStove)world.getBlockTileEntity(x, y, z);
@@ -295,9 +297,10 @@ public class BlockStove extends BlockContainer {
                     }
                 }
             }
+            world.func_96440_m(x, y, z, blockID);
         }
 
-        super.onBlockDestroyedByPlayer(world, x, y, z, metadata);
+        super.breakBlock(world, x, y, z, blockID, metadata);
     }
     
     /**

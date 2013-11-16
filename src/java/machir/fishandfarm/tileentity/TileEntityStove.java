@@ -263,7 +263,26 @@ public class TileEntityStove extends TileEntity implements IInventory {
                     {
                         if(stoveItemStacks[2].getItem().hasContainerItem())
                         {
-                            stoveItemStacks[2] = new ItemStack(stoveItemStacks[2].getItem().getContainerItem());
+                            ItemStack itemStack = new ItemStack(stoveItemStacks[2].getItem().getContainerItem());
+                            stoveItemStacks[2].stackSize--;
+                            
+                            float randX = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+                            float randY = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+                            float randZ = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+                            
+                            EntityItem entityitem = new EntityItem(worldObj, (double)((float)xCoord + randX), (double)((float)yCoord + randY), (double)((float)zCoord + randZ), new ItemStack(itemStack.itemID, 1, itemStack.getItemDamage()));
+
+                            // Insert the itemStack into the entity
+                            if (itemStack.hasTagCompound())
+                            {
+                                entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
+                            }
+
+                            float f = 0.05F;
+                            entityitem.motionX = (double)((float)worldObj.rand.nextGaussian() * f);
+                            entityitem.motionY = (double)((float)worldObj.rand.nextGaussian() * f + 0.2F);
+                            entityitem.motionZ = (double)((float)worldObj.rand.nextGaussian() * f);
+                            worldObj.spawnEntityInWorld(entityitem);
                         } else {
                             stoveItemStacks[2].stackSize--;
                         }
@@ -451,7 +470,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
         }
         int i = itemstack.getItem().itemID;
         // Anything of material wood, return 300
-        if(Block.blocksList[i].blockMaterial == Material.wood)
+        if(i < Block.blocksList.length && Block.blocksList[i].blockMaterial == Material.wood)
         {
             return 300;
         }

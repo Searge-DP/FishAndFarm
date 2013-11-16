@@ -105,7 +105,7 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
     
     public void renderStove() {
     	// Set texture
-        this.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
+    	FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
     	
     	// Start for rotation and rendering stove
         GL11.glPushMatrix();
@@ -118,7 +118,7 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
     
     public void renderFryingPan() {
     	// Set texture
-        this.bindTexture(ModInfo.FRYINGPAN_MODEL_TEXTURE);
+    	FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.FRYINGPAN_MODEL_TEXTURE);
     	
     	// Start for rotation and rendering frying pan
         GL11.glPushMatrix();
@@ -157,9 +157,6 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
 	        // Positioning
 	        GL11.glTranslatef(-0.5F, 1.0F, 0.5F);
 	        
-	        // Set the texture
-	        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
-	        
 	        // Start the model render
 	        GL11.glPushMatrix();
 	        
@@ -182,9 +179,6 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
 	        // Positioning
 	        GL11.glTranslatef(-0.0F, 1.5F, 1.0F);
 	        
-	        // Set the texture
-	        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
-	        
 	        // Start the model render
 	        GL11.glPushMatrix();
 	        
@@ -206,9 +200,6 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
 	        
 	        // Positioning
 	        GL11.glTranslatef(-3.0F, -1.0F, -2.0F);
-	        
-	        // Set the texture
-	        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
 	        
 	        // Start the model render
 	        GL11.glPushMatrix();

@@ -38,14 +38,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = ModInfo.MODID, name = "FishAndFarm", version = ModInfo.VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = { "FishAndFarm" }, packetHandler = PacketHandler.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = { ModInfo.CHANNEL }, packetHandler = PacketHandler.class)
 public class FishAndFarm {
 
 	public static Logger fishAndFarmLog = Logger.getLogger(ModInfo.MODID);
 	public static Configuration fishAndFarmConfig;
-	
-	// Render ID's
-	public static int stoveRenderID = RenderingRegistry.getNextAvailableRenderId();
 	
 	// Blocks
 	public static Block lettuceCrop;
@@ -84,7 +81,7 @@ public class FishAndFarm {
 			GameRegistry.registerItem(food, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_ITEM_FOOD);
 			GameRegistry.addSmelting(Item.egg.itemID, new ItemStack(food, 1, 0), 0.0f);
 			GameRegistry.addShapelessRecipe(new ItemStack(food, 4, 1), new Object[]{Item.bread, new ItemStack(knife.itemID, 1, Short.MAX_VALUE)});
-			GameRegistry.addRecipe(new ItemStack(food, 1, 5), new Object[]{ "S", "E", "B", 'S', new ItemStack(food, 2, 0), 'E', new ItemStack(food, 1, 1), 'B', Item.porkCooked});
+			GameRegistry.addRecipe(new ItemStack(food, 1, 5), new Object[]{ "S", "E", "B", 'S', new ItemStack(food, 2, 1), 'E', new ItemStack(food, 1, 0), 'B', Item.porkCooked});
 			
 			// Lettuce Crop
 			Property lettuceCropID = fishAndFarmConfig.getBlock("lettuceCrop.id", FishAndFarmConfig.DEFAULT_ID_BLOCK_LETTUCE);
@@ -118,12 +115,14 @@ public class FishAndFarm {
 			
 			stove = new BlockStove(stoveID.getInt()).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_STOVE + ".name").setTextureName("stove"); 
 			GameRegistry.registerBlock(stove, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_BLOCK_STOVE);
+			GameRegistry.addRecipe(new ItemStack(stove, 1, 0), new Object[]{ "III", "S S", "SSS", 'I', Item.ingotIron, 'S', Block.stone});
 			
 			// Frying Pan
 			Property fryingPanID = fishAndFarmConfig.getItem("fryingPan.id", FishAndFarmConfig.DEFAULT_ID_ITEM_FRYINGPAN);
 			
 			fryingPan = new ItemFryingPan(fryingPanID.getInt() - 256).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FRYINGPAN + ".name").setTextureName("fryingPan"); 
 			GameRegistry.registerItem(fryingPan, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_ITEM_FRYINGPAN);
+			GameRegistry.addRecipe(new ItemStack(fryingPan, 1, 0), new Object[]{ "IIS", 'S', Item.stick, 'I', Item.ingotIron});
 		
 		} finally {
 			if(fishAndFarmConfig.hasChanged()) {
