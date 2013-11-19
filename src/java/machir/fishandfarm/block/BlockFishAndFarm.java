@@ -1,7 +1,5 @@
 package machir.fishandfarm.block;
 
-import java.util.List;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import machir.fishandfarm.ModInfo;
@@ -9,7 +7,6 @@ import machir.fishandfarm.util.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 

@@ -4,10 +4,9 @@ import java.util.Random;
 
 import machir.fishandfarm.FishAndFarm;
 import machir.fishandfarm.ModInfo;
-import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
-import machir.fishandfarm.tileentity.TileEntityStove;
+import machir.fishandfarm.tileentity.TileEntityEmpty;
+import machir.fishandfarm.tileentity.TileEntitySmoker;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -16,28 +15,23 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockStove extends BlockContainer {
+public class BlockSmoker extends BlockContainer {
     /**
-     * Is the random generator used by the stove to drop the inventory contents in random directions.
+     * Is the random generator used by the smoker to drop the inventory contents in random directions.
      */
-	private Random stoveRand;
-    
-    public BlockStove(int id)
-    {
-        super(id, Material.iron);
-        this.setHardness(0.75F);
-        stoveRand = new Random();
-        setBlockBounds(0.062f, 0.0f, 0.062f, 0.938f, 0.625f, 0.938f);
+	private Random smokerRand;
+	
+	public BlockSmoker(int id) {
+		super(id);
+		this.setHardness(0.75F);
+		smokerRand = new Random();
         setCreativeTab(CreativeTabs.tabDecorations);
-    }
-    
-    /**
+	}
+	
+	/**
      * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
      * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
      */
@@ -63,25 +57,15 @@ public class BlockStove extends BlockContainer {
     }
     
     /**
-     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
-     * cleared to be reused)
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
      */
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+    @Override
+    public boolean canPlaceBlockAt(World world, int x, int y, int z)
     {
-    	float height = 0.625f;
-    	
-    	// Currently not implemented
-//    	TileEntityStove stove = (TileEntityStove) world.getBlockTileEntity(x, y, z);
-//    	if(stove != null)
-//    	{
-//    		if(stove.tool == "cookingPan")
-//    			height = 0.925f;
-//    		if(stove.tool == "fryingPan")
-//    			height = 0.725f;
-//    	}
-        return AxisAlignedBB.getBoundingBox(x , y, z, x + 1.0f, y + height, z + 1.0f);
+    	return super.canPlaceBlockAt(world, x, y, z) && world.isAirBlock(x, y + 1, z);
     }
 
+    
     /**
      * Called whenever the block is added into the world
      * 
@@ -90,10 +74,18 @@ public class BlockStove extends BlockContainer {
      * @param y coordinate
      * @param z coordinate
      */
+    @Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
         setDefaultDirection(world, x, y, z);
+        world.setBlock(x, y + 1, z, FishAndFarm.empty.blockID);
+        TileEntityEmpty empty = (TileEntityEmpty)world.getBlockTileEntity(x, y + 1, z);
+        if (empty != null) {
+        	empty.coreX = x;
+        	empty.coreY = y;
+        	empty.coreZ = z;
+        }
     }
 
     /**
@@ -114,27 +106,27 @@ public class BlockStove extends BlockContainer {
         int south = world.getBlockId(x, y, z + 1);
         int west = world.getBlockId(x - 1, y, z);
         int east = world.getBlockId(x + 1, y, z);
-        byte direction = 3;
+        byte direction = 2;
         if(Block.opaqueCubeLookup[north] && !Block.opaqueCubeLookup[south])
-        {
-        	direction = 3;
-        }
-        if(Block.opaqueCubeLookup[south] && !Block.opaqueCubeLookup[north])
         {
         	direction = 2;
         }
+        if(Block.opaqueCubeLookup[south] && !Block.opaqueCubeLookup[north])
+        {
+        	direction = 1;
+        }
         if(Block.opaqueCubeLookup[west] && !Block.opaqueCubeLookup[east])
         {
-        	direction = 5;
+        	direction = 4;
         }
         if(Block.opaqueCubeLookup[east] && !Block.opaqueCubeLookup[west])
         {
-        	direction = 4;
+        	direction = 3;
         }
         // Update the block metadata and notify all clients
         world.setBlockMetadataWithNotify(x, y, z, direction, 2);
     }
-
+    
     /**
      * Called upon block activation (right click on the block.)
      * 
@@ -151,60 +143,19 @@ public class BlockStove extends BlockContainer {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-    	TileEntityStove tileentitystove = (TileEntityStove)world.getBlockTileEntity(x, y, z);
+    	TileEntitySmoker tileentitysmoker = (TileEntitySmoker)world.getBlockTileEntity(x, y, z);
     	
-    	// If there is a tile entity stove on x, y, z and if the world is not remote, open the gui
-        if(tileentitystove != null)
+    	// If there is a tile entity smoker on x, y, z and if the world is not remote, open the gui
+        if(tileentitysmoker != null)
         {
             if(!world.isRemote)
             {
-            	entityPlayer.openGui(FishAndFarm.instance, FishAndFarm.GUI_STOVE_ID, world, x, y, z);
+            	entityPlayer.openGui(FishAndFarm.instance, FishAndFarm.GUI_SMOKER_ID, world, x, y, z);
             }
         }
         return true;
     }
-
-    /**
-     * A randomly called display update to be able to add particles or other items for display
-     */
-    @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World world, int x, int y, int z, Random random)
-    {
-    	TileEntityStove tileEntityStove = (TileEntityStove)world.getBlockTileEntity(x, y, z);
-    	
-    	if (tileEntityStove != null)
-	        if (tileEntityStove.tool != null && tileEntityStove.stoveBurnTime > 0)
-	        {
-	            int metadata = world.getBlockMetadata(x, y, z);
-	            float particleX = (float)x + 0.5F;
-	            float particleY = (float)y + 0.6F + random.nextFloat() / 6.0F;
-	            float particleZ = (float)z + 0.5F;
-	            float particleOffsetCenter = (tileEntityStove.tool == StoveToolType.FRYINGPAN ? 0.1F + (random.nextFloat() * 2.5F / 20.0F) : -0.1F + (random.nextFloat() * 2.5F / 20.0F));
-	            float particleOffsetFront = random.nextFloat() * 3.5F / 10.0F;
-	
-	            if (metadata == 4)
-	            {
-	            	world.spawnParticle("smoke", (double)(particleX - particleOffsetCenter), (double)particleY + 0.3F, (double)(particleZ + particleOffsetFront), 0.0D, 0.0D, 0.0D);
-	            	world.spawnParticle("flame", (double)(particleX - particleOffsetCenter), (double)particleY, (double)(particleZ + particleOffsetFront), 0.0D, 0.0D, 0.0D);
-	            }
-	            else if (metadata == 5)
-	            {
-	            	world.spawnParticle("smoke", (double)(particleX + particleOffsetCenter), (double)particleY + 0.3F, (double)(particleZ - particleOffsetFront), 0.0D, 0.0D, 0.0D);
-	            	world.spawnParticle("flame", (double)(particleX + particleOffsetCenter), (double)particleY, (double)(particleZ - particleOffsetFront), 0.0D, 0.0D, 0.0D);
-	            }
-	            else if (metadata == 2)
-	            {
-	            	world.spawnParticle("smoke", (double)(particleX - particleOffsetFront), (double)particleY + 0.3F, (double)(particleZ - particleOffsetCenter), 0.0D, 0.0D, 0.0D);
-	                world.spawnParticle("flame", (double)(particleX - particleOffsetFront), (double)particleY, (double)(particleZ - particleOffsetCenter), 0.0D, 0.0D, 0.0D);
-	            }
-	            else if (metadata == 3)
-	            {
-	            	world.spawnParticle("smoke", (double)(particleX + particleOffsetFront), (double)particleY + 0.3F, (double)(particleZ + particleOffsetCenter), 0.0D, 0.0D, 0.0D);
-	            	world.spawnParticle("flame", (double)(particleX + particleOffsetFront), (double)particleY, (double)(particleZ + particleOffsetCenter), 0.0D, 0.0D, 0.0D);
-	            }
-	        }
-    }
-
+    
     /**
      * Called when the block is placed in the world.
      * 
@@ -221,20 +172,20 @@ public class BlockStove extends BlockContainer {
     	int direction = MathHelper.floor_double((double)((entityLivingBase.rotationYaw * 4F) / 360F) + 0.5D) & 3;
         if(direction == 0)
         {
-            world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+            world.setBlockMetadataWithNotify(x, y, z, 1, 2);
         }
         if(direction == 1)
         {
-            world.setBlockMetadataWithNotify(x, y, z, 5, 2);
+            world.setBlockMetadataWithNotify(x, y, z, 4, 2);
         }
         // North?
         if(direction == 2)
         {
-            world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+            world.setBlockMetadataWithNotify(x, y, z, 2, 2);
         }
         if(direction == 3)
         {
-            world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+            world.setBlockMetadataWithNotify(x, y, z, 3, 2);
         }
     }
     
@@ -252,7 +203,7 @@ public class BlockStove extends BlockContainer {
     public void breakBlock(World world, int x, int y, int z, int blockID, int metadata)
     {
     	// Check if the tile entity exists
-        TileEntityStove tileentity = (TileEntityStove)world.getBlockTileEntity(x, y, z);
+        TileEntitySmoker tileentity = (TileEntitySmoker)world.getBlockTileEntity(x, y, z);
 
         if (tileentity != null)
         {
@@ -263,15 +214,15 @@ public class BlockStove extends BlockContainer {
 
                 if (itemstack != null)
                 {
-                    float randX = stoveRand.nextFloat() * 0.8F + 0.1F;
-                    float randY = stoveRand.nextFloat() * 0.8F + 0.1F;
-                    float randZ = stoveRand.nextFloat() * 0.8F + 0.1F;
+                    float randX = smokerRand.nextFloat() * 0.8F + 0.1F;
+                    float randY = smokerRand.nextFloat() * 0.8F + 0.1F;
+                    float randZ = smokerRand.nextFloat() * 0.8F + 0.1F;
 
                     // As long as we still haven't emptied the slot 
                     // Keep on throwing itemStacks out
                     while (itemstack.stackSize > 0)
                     {
-                        int stackSize = stoveRand.nextInt(21) + 10;
+                        int stackSize = smokerRand.nextInt(21) + 10;
 
                         // If the stackSize to drop is bigger than the itemstack's stackSize,
                         // Set the stackSize to drop to the itemstack's stackSize
@@ -290,9 +241,9 @@ public class BlockStove extends BlockContainer {
                         }
 
                         float f = 0.05F;
-                        entityitem.motionX = (double)((float)stoveRand.nextGaussian() * f);
-                        entityitem.motionY = (double)((float)stoveRand.nextGaussian() * f + 0.2F);
-                        entityitem.motionZ = (double)((float)stoveRand.nextGaussian() * f);
+                        entityitem.motionX = (double)((float)smokerRand.nextGaussian() * f);
+                        entityitem.motionY = (double)((float)smokerRand.nextGaussian() * f + 0.2F);
+                        entityitem.motionZ = (double)((float)smokerRand.nextGaussian() * f);
                         world.spawnEntityInWorld(entityitem);
                     }
                 }
@@ -352,8 +303,8 @@ public class BlockStove extends BlockContainer {
                 }
             }
             
-            // Divide the outputStrength by the size of the inventory - tool slot
-            outputStrength /= (float)inventory.getSizeInventory() - 1;
+            // Divide the outputStrength by the size of the inventory
+            outputStrength /= (float)inventory.getSizeInventory();
             
             // Calculate the final result and return it
             return MathHelper.floor_float(outputStrength * 14.0F) + (filledSlots > 0 ? 1 : 0);
@@ -367,16 +318,17 @@ public class BlockStove extends BlockContainer {
 	 */
 	@Override
 	public String getUnlocalizedName() {		
-		return ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_STOVE;
+		return ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_SMOKER;
 	}
-    
-    /**
+
+	/**
      * return a new tile entity stove, used to add a tile entity to the block
      * 
      * @param world The world
      */
-    @Override
+	@Override
 	public TileEntity createNewTileEntity(World world) {
-    	return new TileEntityStove();
+		return new TileEntitySmoker();
 	}
+	
 }

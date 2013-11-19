@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.AchievementList;
 
 public class SlotStove extends Slot {
-	private EntityPlayer thePlayer;
-	
-	// The amount of items in the slot
+    private EntityPlayer thePlayer;
+    
+    // The amount of items in the slot
     private int amount;
 
     public SlotStove(EntityPlayer player, IInventory inventory, int x, int y, int z)
@@ -30,7 +30,7 @@ public class SlotStove extends Slot {
     {
         if (getHasStack())
         {
-        	amount += Math.min(amount, getStack().stackSize);
+                amount += Math.min(amount, getStack().stackSize);
         }
 
         return super.decrStackSize(amount);
@@ -39,21 +39,21 @@ public class SlotStove extends Slot {
     @Override
     public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemstack)
     {
-    	onCrafting(itemstack);
+            onCrafting(itemstack);
         super.onPickupFromSlot(entityPlayer, itemstack);
     }
 
     @Override
     protected void onCrafting(ItemStack itemstack, int amount)
     {
-    	this.amount += amount;
-    	onCrafting(itemstack);
+            this.amount += amount;
+            onCrafting(itemstack);
     }
 
     @Override
     protected void onCrafting(ItemStack itemstack)
     {
-    	// Add the amount of processed items to the stats
+            // Add the amount of processed items to the stats
         itemstack.onCrafting(thePlayer.worldObj, thePlayer, amount);
         amount = 0;
 

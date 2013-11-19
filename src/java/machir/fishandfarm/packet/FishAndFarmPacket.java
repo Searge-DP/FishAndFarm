@@ -14,42 +14,42 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
 public abstract class FishAndFarmPacket {
-	public static final String CHANNEL = ModInfo.CHANNEL;
-	private static final BiMap<Integer, Class<? extends FishAndFarmPacket>> idMap;
-	
-	static {
-		ImmutableBiMap.Builder<Integer, Class<? extends FishAndFarmPacket>> builder = ImmutableBiMap.builder();
-		builder.put(Integer.valueOf(0), StovePacket.class);
-		idMap = builder.build();
-	}
-	
-	public static FishAndFarmPacket constructPacket(int packetId) throws ProtocolException, ReflectiveOperationException {
-		Class<? extends FishAndFarmPacket> clazz = idMap.get(Integer.valueOf(packetId));
-		if (clazz == null) {
-			throw new ProtocolException("Unknown Packet Id");
-		} else {
-			return clazz.newInstance();
-		}
-	}
-	
-	public static class ProtocolException extends Exception {
-		public ProtocolException() {
-		}
-		
-		public ProtocolException(String message, Throwable cause) {
+        public static final String CHANNEL = ModInfo.CHANNEL;
+        private static final BiMap<Integer, Class<? extends FishAndFarmPacket>> idMap;
+        
+        static {
+                ImmutableBiMap.Builder<Integer, Class<? extends FishAndFarmPacket>> builder = ImmutableBiMap.builder();
+                builder.put(Integer.valueOf(0), TileEntityPacket.class);
+                idMap = builder.build();
+        }
+        
+        public static FishAndFarmPacket constructPacket(int packetId) throws ProtocolException, ReflectiveOperationException {
+                Class<? extends FishAndFarmPacket> clazz = idMap.get(Integer.valueOf(packetId));
+                if (clazz == null) {
+                        throw new ProtocolException("Unknown Packet Id");
+                } else {
+                        return clazz.newInstance();
+                }
+        }
+        
+        public static class ProtocolException extends Exception {
+                public ProtocolException() {
+                }
+                
+                public ProtocolException(String message, Throwable cause) {
             super(message, cause);
-	    }
-	
-	    public ProtocolException(String message) {
-	            super(message);
-	    }
-	
-	    public ProtocolException(Throwable cause) {
-	            super(cause);
-	    }
-	}
-	
-	public final int getPacketId() {
+            }
+        
+            public ProtocolException(String message) {
+                    super(message);
+            }
+        
+            public ProtocolException(Throwable cause) {
+                    super(cause);
+            }
+        }
+        
+        public final int getPacketId() {
         if (idMap.inverse().containsKey(getClass())) {
                 return idMap.inverse().get(getClass()).intValue();
         } else {

@@ -1,12 +1,11 @@
 package machir.fishandfarm.tileentity;
 
 import machir.fishandfarm.ModInfo;
-import machir.fishandfarm.handler.PacketHandler;
 import machir.fishandfarm.item.crafting.EnumStoveToolType;
 import machir.fishandfarm.item.crafting.EnumStoveToolType.StoveToolType;
 import machir.fishandfarm.item.crafting.IStoveTool;
 import machir.fishandfarm.item.crafting.StoveRecipes;
-import machir.fishandfarm.packet.StovePacket;
+import machir.fishandfarm.packet.TileEntityPacket;
 import machir.fishandfarm.util.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -31,10 +30,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityStove extends TileEntity implements IInventory {
-	// The itemstacks inside
-	private ItemStack stoveItemStacks[];
-	
-	// The burn times
+    // The itemstacks inside
+    private ItemStack stoveItemStacks[];
+    
+    // The burn times
     public int stoveBurnTime;
     public int currentItemBurnTime;
     public int stoveCookTime;
@@ -44,7 +43,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
     
     public TileEntityStove()
     {
-    	// 4 Slots, 1 tool, 1 food, 1 fuel, 1 output
+        // 4 Slots, 1 tool, 1 food, 1 fuel, 1 output
         stoveItemStacks = new ItemStack[4];
         
         stoveBurnTime = 0;
@@ -101,7 +100,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
      * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
      * like when you close a workbench GUI.
      */
-	public ItemStack getStackInSlotOnClosing(int slot) {
+        public ItemStack getStackInSlotOnClosing(int slot) {
         if (stoveItemStacks[slot] != null)
         {
             ItemStack itemstack = stoveItemStacks[slot];
@@ -112,7 +111,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
         {
             return null;
         }
-	}
+        }
 
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
@@ -122,7 +121,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
         stoveItemStacks[slot] = itemStack;
         if(itemStack != null && itemStack.stackSize > getInventoryStackLimit())
         {
-        	itemStack.stackSize = getInventoryStackLimit();
+                itemStack.stackSize = getInventoryStackLimit();
         }
     }
 
@@ -243,55 +242,31 @@ public class TileEntityStove extends TileEntity implements IInventory {
         // If a tool was used, update the tool string
         if(stoveItemStacks[0] != null)
         {
-        	this.tool = (stoveItemStacks[0].getItem() instanceof IStoveTool ? ((IStoveTool)stoveItemStacks[0].getItem()).getToolType() : null);
+                this.tool = (stoveItemStacks[0].getItem() instanceof IStoveTool ? ((IStoveTool)stoveItemStacks[0].getItem()).getToolType() : null);
         }
         // No tool was used, empty the tool string
         else
         {
-        	this.tool = null;
+                this.tool = null;
         }
         
         if(!worldObj.isRemote)
         {
-        	// If it's not burning but can process, try to use fuel
+            // If it's not burning but can process, try to use fuel
             if(stoveBurnTime == 0 && canProcess())
             {
-            	// Add the fuel to the stove
+                // Add the fuel to the stove
                 currentItemBurnTime = stoveBurnTime = getItemBurnTime(stoveItemStacks[2]);
                 if(stoveBurnTime > 0)
                 {
-                	// Changed from inactive to active
-                	changedActivity = true;
-                	
-                	// If the item to be processed is not empty,
-                	// Check if it has a container item, if not decrease the stack size
+                    // Changed from inactive to active
+                    changedActivity = true;
+                    
+                    // If the item to be processed is not empty,
+                    // Check if it has a container item, if not decrease the stack size
                     if(stoveItemStacks[2] != null)
                     {
-                        if(stoveItemStacks[2].getItem().hasContainerItem())
-                        {
-                            ItemStack itemStack = new ItemStack(stoveItemStacks[2].getItem().getContainerItem());
-                            stoveItemStacks[2].stackSize--;
-                            
-                            float randX = worldObj.rand.nextFloat() * 0.8F + 0.1F;
-                            float randY = worldObj.rand.nextFloat() * 0.8F + 0.1F;
-                            float randZ = worldObj.rand.nextFloat() * 0.8F + 0.1F;
-                            
-                            EntityItem entityitem = new EntityItem(worldObj, (double)((float)xCoord + randX), (double)((float)yCoord + randY), (double)((float)zCoord + randZ), new ItemStack(itemStack.itemID, 1, itemStack.getItemDamage()));
-
-                            // Insert the itemStack into the entity
-                            if (itemStack.hasTagCompound())
-                            {
-                                entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
-                            }
-
-                            float f = 0.05F;
-                            entityitem.motionX = (double)((float)worldObj.rand.nextGaussian() * f);
-                            entityitem.motionY = (double)((float)worldObj.rand.nextGaussian() * f + 0.2F);
-                            entityitem.motionZ = (double)((float)worldObj.rand.nextGaussian() * f);
-                            worldObj.spawnEntityInWorld(entityitem);
-                        } else {
-                            stoveItemStacks[2].stackSize--;
-                        }
+                        stoveItemStacks[2].stackSize--;
                         
                         // If the stack size is 0, remove the itemstack
                         if(stoveItemStacks[2].stackSize == 0)
@@ -304,7 +279,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
             // If it is burning and it can process
             if(isBurning() && canProcess())
             {
-            	// Increase the cooking time
+                    // Increase the cooking time
                 stoveCookTime++;
                 
                 // If it has reached it's end process the item
@@ -335,18 +310,18 @@ public class TileEntityStove extends TileEntity implements IInventory {
     
     @Override
     public void onInventoryChanged() {
-    	super.onInventoryChanged();
-    	sendPacket();
+        super.onInventoryChanged();
+        sendPacket();
     }
     
     public void sendPacket() {
-		NBTTagCompound nbttagcompound = new NBTTagCompound();
-		this.writeToNBT(nbttagcompound);
-    	if (this.worldObj.isRemote) {
-    		PacketDispatcher.sendPacketToServer(new StovePacket(nbttagcompound).makePacket());
-    	} else {
-    		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 16, 0, new StovePacket(nbttagcompound).makePacket());
-    	}
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        this.writeToNBT(nbttagcompound);
+        if (this.worldObj.isRemote) {
+            PacketDispatcher.sendPacketToServer(new TileEntityPacket(nbttagcompound).makePacket());
+        } else {
+            PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 16, 0, new TileEntityPacket(nbttagcompound).makePacket());
+        }
     }
 
     /**
@@ -356,7 +331,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
      */
     private boolean canProcess()
     {
-    	// If the process slot or the tool slot is empty, return false
+        // If the process slot or the tool slot is empty, return false
         if(stoveItemStacks[0]== null || stoveItemStacks[1]== null)
         {
             return false;
@@ -400,7 +375,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
      */
     public void processItem()
     {
-    	// If the item cannot be processed, return
+            // If the item cannot be processed, return
         if(!canProcess())
         {
             return;
@@ -418,16 +393,16 @@ public class TileEntityStove extends TileEntity implements IInventory {
         // Increase the stack size
         else if(stoveItemStacks[3].itemID == itemstack.itemID)
         {
-        	stoveItemStacks[3].stackSize++;
+                stoveItemStacks[3].stackSize++;
         }
         
         // If the processed item has a container item
         // Pop out the container item
         if(stoveItemStacks[1].getItem().hasContainerItem())
         {
-        	ItemStack itemStack = new ItemStack(stoveItemStacks[1].getItem().getContainerItem());
-        	
-        	float randX = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+            ItemStack itemStack = new ItemStack(stoveItemStacks[1].getItem().getContainerItem());
+            
+            float randX = worldObj.rand.nextFloat() * 0.8F + 0.1F;
             float randY = worldObj.rand.nextFloat() * 0.8F + 0.1F;
             float randZ = worldObj.rand.nextFloat() * 0.8F + 0.1F;
             
@@ -445,13 +420,13 @@ public class TileEntityStove extends TileEntity implements IInventory {
             entityitem.motionZ = (double)((float)worldObj.rand.nextGaussian() * f);
             worldObj.spawnEntityInWorld(entityitem);
         }
-      	// Decrease the processed item stack
+        // Decrease the processed item stack
         stoveItemStacks[1].stackSize--;
         
         // Get the tool and if it's damageable, damage it
         if (stoveItemStacks[0].isItemStackDamageable() && 
-        		stoveItemStacks[0].attemptDamageItem(1, this.worldObj.rand)) {
-    		stoveItemStacks[0] = null;
+            stoveItemStacks[0].attemptDamageItem(1, this.worldObj.rand)) {
+            stoveItemStacks[0] = null;
         }
         
         // If the process stack size is less or equal to 0, remove the itemstack
@@ -469,7 +444,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
      */
     private int getItemBurnTime(ItemStack itemstack)
     {
-    	//  If no fuel is inserted, return 0
+        //  If no fuel is inserted, return 0
         if(itemstack == null)
         {
             return 0;
@@ -536,7 +511,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
     @Override
     public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
     {
-    	this.readFromNBT(packet.data);
+        this.readFromNBT(packet.data);
     }
     
     /**
@@ -545,7 +520,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
     @Override
     public Packet getDescriptionPacket()
     {
-    	NBTTagCompound nbttagcompound = new NBTTagCompound();
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
         return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, -1, nbttagcompound);
     }
@@ -570,16 +545,16 @@ public class TileEntityStove extends TileEntity implements IInventory {
      * If this returns false, the inventory name will be used as an unlocalized name, and translated into the player's
      * language. Otherwise it will be used directly.
      */
-	@Override
-	public boolean isInvNameLocalized() {
-		return true;
-	}
+    @Override
+    public boolean isInvNameLocalized() {
+            return true;
+    }
 
     /**
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      */
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		return false;
-	}
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+            return false;
+    }
 }

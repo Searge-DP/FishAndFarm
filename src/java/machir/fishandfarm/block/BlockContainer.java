@@ -13,6 +13,12 @@ public abstract class BlockContainer extends BlockFishAndFarm implements ITileEn
         super(id, material);
         this.isBlockContainer = true;
     }
+	
+	protected BlockContainer(int id)
+    {
+        super(id);
+        this.isBlockContainer = true;
+    }
 
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z

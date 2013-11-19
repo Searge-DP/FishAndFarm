@@ -1,58 +1,52 @@
 package machir.fishandfarm.inventory.container;
 
-import machir.fishandfarm.inventory.slot.SlotStove;
-import machir.fishandfarm.inventory.slot.SlotTool;
-import machir.fishandfarm.tileentity.TileEntityStove;
+import machir.fishandfarm.inventory.slot.SlotFish;
+import machir.fishandfarm.inventory.slot.SlotSmokerFuel;
+import machir.fishandfarm.tileentity.TileEntitySmoker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ContainerStove extends Container {
-    private TileEntityStove stove;
-    private int lastCookTime;
+public class ContainerSmoker extends Container {
+    private TileEntitySmoker smoker;
     private int lastBurnTime;
     private int lastItemBurnTime;
 
-    public ContainerStove(InventoryPlayer inventoryplayer, TileEntityStove tileentitystove)
+    public ContainerSmoker(InventoryPlayer inventoryplayer, TileEntitySmoker tileentitysmoker)
     {
-        lastCookTime = 0;
         lastBurnTime = 0;
         lastItemBurnTime = 0;
-        stove = tileentitystove;
-        addSlotToContainer(new SlotTool(tileentitystove, 0, 20, 17));
-        addSlotToContainer(new Slot(tileentitystove, 1, 56, 17));
-        addSlotToContainer(new Slot(tileentitystove, 2, 56, 53));
-        addSlotToContainer(new SlotStove(inventoryplayer.player, tileentitystove, 3, 116, 35));
+        smoker = tileentitysmoker;
+        addSlotToContainer(new SlotSmokerFuel(tileentitysmoker, 0, 80, 59));
+        addSlotToContainer(new SlotFish(inventoryplayer.player, tileentitysmoker, 1, 26, 21));
+        addSlotToContainer(new SlotFish(inventoryplayer.player, tileentitysmoker, 2, 62, 21));
+        addSlotToContainer(new SlotFish(inventoryplayer.player, tileentitysmoker, 3, 98, 21));
+        addSlotToContainer(new SlotFish(inventoryplayer.player, tileentitysmoker, 4, 134, 21));
         for(int i = 0; i < 3; i++)
         {
             for(int k = 0; k < 9; k++)
             {
                 addSlotToContainer(new Slot(inventoryplayer, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
             }
-
         }
 
         for(int j = 0; j < 9; j++)
         {
             addSlotToContainer(new Slot(inventoryplayer, j, 8 + j * 18, 142));
         }
-
     }
 
     @Override
     public void addCraftingToCrafters(ICrafting iCrafting)
     {
         super.addCraftingToCrafters(iCrafting);
-        iCrafting.sendProgressBarUpdate(this, 0, this.stove.stoveCookTime);
-        iCrafting.sendProgressBarUpdate(this, 1, this.stove.stoveBurnTime);
-        iCrafting.sendProgressBarUpdate(this, 2, this.stove.currentItemBurnTime);
+        iCrafting.sendProgressBarUpdate(this, 0, this.smoker.smokerBurnTime);
+        iCrafting.sendProgressBarUpdate(this, 1, this.smoker.currentItemBurnTime);
     }
 
     /**
@@ -66,26 +60,19 @@ public class ContainerStove extends Container {
         for (int i = 0; i < this.crafters.size(); ++i)
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
-
-            if (this.lastCookTime != this.stove.stoveCookTime)
+            if (this.lastBurnTime != this.smoker.smokerBurnTime)
             {
-                icrafting.sendProgressBarUpdate(this, 0, this.stove.stoveCookTime);
+                icrafting.sendProgressBarUpdate(this, 0, this.smoker.smokerBurnTime);
             }
 
-            if (this.lastBurnTime != this.stove.stoveBurnTime)
+            if (this.lastItemBurnTime != this.smoker.currentItemBurnTime)
             {
-                icrafting.sendProgressBarUpdate(this, 1, this.stove.stoveBurnTime);
-            }
-
-            if (this.lastItemBurnTime != this.stove.currentItemBurnTime)
-            {
-                icrafting.sendProgressBarUpdate(this, 2, this.stove.currentItemBurnTime);
+                icrafting.sendProgressBarUpdate(this, 1, this.smoker.currentItemBurnTime);
             }
         }
 
-        this.lastCookTime = this.stove.stoveCookTime;
-        this.lastBurnTime = this.stove.stoveBurnTime;
-        this.lastItemBurnTime = this.stove.currentItemBurnTime;
+        this.lastBurnTime = this.smoker.smokerBurnTime;
+        this.lastItemBurnTime = this.smoker.currentItemBurnTime;
     }
     
     @SideOnly(Side.CLIENT)
@@ -93,60 +80,63 @@ public class ContainerStove extends Container {
     {
         if (progressBar == 0)
         {
-            this.stove.stoveCookTime = progressBarValue;
+            this.smoker.smokerBurnTime = progressBarValue;
         }
 
         if (progressBar == 1)
         {
-            this.stove.stoveBurnTime = progressBarValue;
-        }
-
-        if (progressBar == 2)
-        {
-            this.stove.currentItemBurnTime = progressBarValue;
+            this.smoker.currentItemBurnTime = progressBarValue;
         }
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return stove.isUseableByPlayer(entityplayer);
+        return smoker.isUseableByPlayer(entityplayer);
     }
     
     /**
      * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
      */
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int i)
+    public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotID)
     {
         ItemStack itemstack = null;
-        Slot slot = (Slot)inventorySlots.get(i);
+        Slot slot = (Slot)inventorySlots.get(slotID);
         if(slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if(i == 2)
+            if(slotID == 0)
             {
-                if(!mergeItemStack(itemstack1, 4, 39, true))
+                if(!mergeItemStack(itemstack1, 5, 39, true))
+                {
+                    return null;
+                }
+            } else if (slotID >= 1 && slotID < 5) {
+            	if(!mergeItemStack(itemstack1, 5, 39, false)) {
+            		return null;
+            	}
+            } else
+            if(slotID >= 5 && slotID < 30)
+            {
+            	if (((Slot)inventorySlots.get(1)).isItemValid(itemstack1)) {
+	                if(!mergeItemStack(itemstack1, 1, 4, false))
+	                {
+	                    return null;
+	                }
+            	} else {
+            		return null;
+            	}
+            } else
+            if(slotID >= 30 && slotID < 39)
+            {
+                if(!mergeItemStack(itemstack1, 5, 30, false))
                 {
                     return null;
                 }
             } else
-            if(i >= 4 && i < 30)
-            {
-                if(!mergeItemStack(itemstack1, 0, 1, false))
-                {
-                    return null;
-                }
-            } else
-            if(i >= 30 && i < 39)
-            {
-                if(!mergeItemStack(itemstack1, 4, 30, false))
-                {
-                    return null;
-                }
-            } else
-            if(!mergeItemStack(itemstack1, 4, 39, false))
+            if(!mergeItemStack(itemstack1, 5, 39, false))
             {
                 return null;
             }

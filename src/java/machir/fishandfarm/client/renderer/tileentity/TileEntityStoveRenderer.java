@@ -17,17 +17,17 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 
 public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implements IItemRenderer {
-	private ModelStove stove;
-	private ModelFryingPan fryingPan;
+    private ModelStove stove;
+    private ModelFryingPan fryingPan;
 
     public TileEntityStoveRenderer()
     {
-    	stove = new ModelStove();
-    	fryingPan = new ModelFryingPan();
+            stove = new ModelStove();
+            fryingPan = new ModelFryingPan();
     }
 
     public void renderModelAt(TileEntityStove tileEntityStove, double d, double d1, double d2, float f)
-    {  	
+    {          
         int i;
 
         if (tileEntityStove.worldObj == null)
@@ -81,22 +81,22 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
         renderStove();
         
         if (tileEntityStove.worldObj != null && tileEntityStove.tool != null) {
-    		switch (tileEntityStove.tool) {
-    		case FRYINGPAN:
-                // Render the fryingPan
-                renderFryingPan();
-				break;
-				
-    			default: 
-				break;
-    		}
+            switch (tileEntityStove.tool) {
+            case FRYINGPAN:
+	            // Render the fryingPan
+	            renderFryingPan();
+                break;
+                
+            default: 
+            	break;
+            }
         } else {
             renderStove();
         }
         
         // Fix textures if it's placed
         if (tileEntityStove.worldObj != null) {
-        	this.bindTexture(TextureMap.locationBlocksTexture);
+            this.bindTexture(TextureMap.locationBlocksTexture);
         }
         
         // Stop
@@ -104,30 +104,30 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
     }
     
     public void renderStove() {
-    	// Set texture
-    	FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
-    	
-    	// Start for rotation and rendering stove
+        // Set texture
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.STOVE_MODEL_TEXTURE);
+        
+        // Start for rotation and rendering stove
         GL11.glPushMatrix();
         GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-	    stove.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
-		
-	    // Stop rotation and rendering stove
+        stove.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+            
+        // Stop rotation and rendering stove
         GL11.glPopMatrix();
     }
     
     public void renderFryingPan() {
-    	// Set texture
-    	FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.FRYINGPAN_MODEL_TEXTURE);
-    	
-    	// Start for rotation and rendering frying pan
+        // Set texture
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModInfo.FRYINGPAN_MODEL_TEXTURE);
+        
+        // Start for rotation and rendering frying pan
         GL11.glPushMatrix();
         GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
         
         // Render! :3
-		fryingPan.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
-		
-	    // Stop rotation and rendering stove
+        fryingPan.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+                
+        // Stop rotation and rendering stove
         GL11.glPopMatrix();
     }
 
@@ -136,66 +136,66 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
         renderModelAt((TileEntityStove)tileentity, d, d1, d2, f);
     }
 
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return true;
-	}
+    @Override
+    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
+        return true;
+    }
 
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-			ItemRendererHelper helper) {
-		return true;
-	}
+    @Override
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
+                    ItemRendererHelper helper) {
+        return true;
+    }
 
-	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		switch(type) {
-		case ENTITY:
-	        // Start
-	        GL11.glPushMatrix();
-	        
-	        // Positioning
-	        GL11.glTranslatef(-0.5F, 1.0F, 0.5F);
-	        
-	        // Start the model render
-	        GL11.glPushMatrix();
-	        
-	        // Rotation
-	        GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
-	        
-	        // Render the stove
-			renderStove();
-			
-			// Stop the model render
-			GL11.glPopMatrix();
-			
-			// Stop
-			GL11.glPopMatrix();
-			break;
-		case EQUIPPED:
-			// Start
-	        GL11.glPushMatrix();
-	        
-	        // Positioning
-	        GL11.glTranslatef(-0.0F, 1.5F, 1.0F);
-	        
-	        // Start the model render
-	        GL11.glPushMatrix();
-	        
-	        // Rotation
-	        GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
-	        
-	        // Render the stove
-			renderStove();
-			
-			// Stop the model render
-			GL11.glPopMatrix();
-			
-			// Stop
-			GL11.glPopMatrix();
-			break;
-		case INVENTORY:
-			// Start
+    @Override
+    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+        switch(type) {
+        case ENTITY:
+            // Start
+            GL11.glPushMatrix();
+            
+            // Positioning
+            GL11.glTranslatef(-0.5F, 1.0F, 0.5F);
+            
+            // Start the model render
+            GL11.glPushMatrix();
+            
+            // Rotation
+            GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+            
+            // Render the stove
+            renderStove();
+            
+            // Stop the model render
+            GL11.glPopMatrix();
+            
+            // Stop
+            GL11.glPopMatrix();
+            break;
+        case EQUIPPED:
+            // Start
+            GL11.glPushMatrix();
+            
+            // Positioning
+            GL11.glTranslatef(-0.0F, 1.5F, 1.0F);
+            
+            // Start the model render
+            GL11.glPushMatrix();
+            
+            // Rotation
+            GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+            
+            // Render the stove
+            renderStove();
+            
+            // Stop the model render
+            GL11.glPopMatrix();
+            
+            // Stop
+            GL11.glPopMatrix();
+            break;
+        case INVENTORY:
+                // Start
 	        GL11.glPushMatrix();
 	        
 	        // Positioning
@@ -208,18 +208,16 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
 	        GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
 	        
 	        // Render the stove
-			renderStove();
-			
-			// Stop the model render
-			GL11.glPopMatrix();
-			
-			// Stop
-			GL11.glPopMatrix();
-			break;
-		default:
-			break;
-		}
-		
-	}
+            renderStove();
+            
+            // Stop the model render
+            GL11.glPopMatrix();
+            
+            // Stop
+            GL11.glPopMatrix();
+            break;
+        default:
+                break;
+        }
+    }
 }
-

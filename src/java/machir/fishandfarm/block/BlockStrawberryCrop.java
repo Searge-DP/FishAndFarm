@@ -33,27 +33,15 @@ public class BlockStrawberryCrop extends BlockCrop {
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
     {
     	// A list of dropped items
-        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> items = super.getBlockDropped(world, x, y, z, metadata, fortune);
 
         // If the crop is on it's last stage drop seeds
         if (metadata >= this.maxGrowthStage)
         {
-            for (int n = 0; n < 3 + fortune; n++)
-            {	
-            	// A random chance to add seeds (A maximum of 3 + fortune)
-                if (world.rand.nextInt(15) <= metadata)
-                {
-                	items.add(new ItemStack(FishAndFarm.seeds, 1, this.SEED_DAMAGE));
-                }
-                
-            }
-            for (int n = 0; n < 2 + fortune; n++) 
+            for (int n = 0; n < 2 + fortune + world.rand.nextInt(3); n++) 
             {
-            	// A random chance to add more strawberries (A maximum of 2 + fortune)
-                if (world.rand.nextInt(15) <= metadata)
-                {
-                	items.add(new ItemStack(FishAndFarm.food, 1, this.STRAWBERRY_DAMAGE));
-                }
+            	// A random chance to add more strawberries (A maximum of 5 + fortune)
+                items.add(new ItemStack(FishAndFarm.food, 1, this.STRAWBERRY_DAMAGE));
             }
         }
 
@@ -129,7 +117,7 @@ public class BlockStrawberryCrop extends BlockCrop {
     {
     	// Check if the metadata is on it's final stage
     	if (world.getBlockMetadata(x, y, z) == this.maxGrowthStage) {
-    		// Drop strawberries
+    		// Drop tomatoes
     		this.dropBlockAsItemWithChance(world, x, y, z, world.getBlockMetadata(x, y, z), 1.0F, 0);
     		// Set the stage back to just before the flowers pop on
     		world.setBlockMetadataWithNotify(x, y, z, this.maxGrowthStage - 1, 2);
