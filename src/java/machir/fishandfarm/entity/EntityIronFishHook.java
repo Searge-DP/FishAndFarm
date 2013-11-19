@@ -105,6 +105,7 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
         this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.calculateVelocity(this.motionX, this.motionY, this.motionZ, 1.5F, 1.0F);
+        entityPlayer.fishEntity = this;
     }
 
     protected void entityInit() {}
@@ -502,9 +503,15 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
             {
             	ItemStack catchedItemStack = null;
             	
-            	int catchChance = (this.worldObj.rand.nextInt() * 100) + 1;
-            	if (catchChance > 10) {
+            	int catchChance = this.worldObj.rand.nextInt(100) + 1;
+            	if (catchChance > 60) {
             		catchedItemStack = new ItemStack(Item.fishRaw);
+            	} else if (catchChance > 50) {
+            	    catchedItemStack = new ItemStack(FishAndFarm.fish, 1, 0);
+            	} else if (catchChance > 40) {
+            	    catchedItemStack = new ItemStack(FishAndFarm.fish, 1, 1);
+            	} else if (catchChance > 30) {
+            	    catchedItemStack = new ItemStack(FishAndFarm.fish, 1, 2);
             	} else {
             		catchedItemStack = new ItemStack(Item.bootsLeather);
             	}

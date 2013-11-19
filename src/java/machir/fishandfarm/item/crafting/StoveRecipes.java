@@ -15,6 +15,18 @@ public class StoveRecipes {
         {
             return new ItemStack(Item.fishCooked, 1);
         }
+        if(itemstack.itemID == FishAndFarm.fryingPan.itemID && itemstack2.equals(new ItemStack(FishAndFarm.fish, 1, 0)))
+        {
+            return new ItemStack(FishAndFarm.fish, 1, 3);
+        }
+        if(itemstack.itemID == FishAndFarm.fryingPan.itemID && itemstack2.equals(new ItemStack(FishAndFarm.fish, 1, 1)))
+        {
+            return new ItemStack(FishAndFarm.fish, 1, 4);
+        }
+        if(itemstack.itemID == FishAndFarm.fryingPan.itemID && itemstack2.equals(new ItemStack(FishAndFarm.fish, 1, 2)))
+        {
+            return new ItemStack(FishAndFarm.fish, 1, 5);
+        }
         else
         {
             return null;

@@ -15,6 +15,7 @@ import machir.fishandfarm.handler.CraftingHandler;
 import machir.fishandfarm.handler.PacketHandler;
 import machir.fishandfarm.inventory.slot.SlotFish;
 import machir.fishandfarm.item.ItemCropSeeds;
+import machir.fishandfarm.item.ItemFish;
 import machir.fishandfarm.item.ItemFood;
 import machir.fishandfarm.item.ItemFryingPan;
 import machir.fishandfarm.item.ItemIronFishingRod;
@@ -69,6 +70,7 @@ public class FishAndFarm {
 	public static Item seeds;
 	public static Item fryingPan;
 	public static Item ironFishingRod;
+	public static Item fish;
 	
 	@Instance(ModInfo.MODID)
 	public static FishAndFarm instance;
@@ -93,7 +95,6 @@ public class FishAndFarm {
 			
 			food = new ItemFood(foodID.getInt() - 256).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FOOD + ".name"); 
 			GameRegistry.registerItem(food, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_ITEM_FOOD);
-			GameRegistry.addSmelting(Item.egg.itemID, new ItemStack(food, 1, 0), 0.0f);
 			GameRegistry.addShapelessRecipe(new ItemStack(food, 4, 1), new Object[]{Item.bread, new ItemStack(knife.itemID, 1, Short.MAX_VALUE)});
 			GameRegistry.addRecipe(new ItemStack(food, 1, 5), new Object[]{ "S", "E", "B", 'S', new ItemStack(food, 2, 0), 'E', new ItemStack(food, 1, 1), 'B', Item.porkCooked});
 			
@@ -157,6 +158,10 @@ public class FishAndFarm {
 			
 			smoker = new BlockSmoker(smokerID.getInt()).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_SMOKER + ".name").setTextureName("smoker"); 
 			GameRegistry.registerBlock(smoker, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_BLOCK_SMOKER);
+			
+			// Fish, overrides default fish
+            fish = new ItemFish(Item.fishRaw.itemID - 256).setUnlocalizedName(ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FISH + ".name"); 
+            GameRegistry.registerItem(fish, ModInfo.MODID + ":" + ModInfo.UNLOC_NAME_ITEM_FISH);
 		} finally {
 			if(fishAndFarmConfig.hasChanged()) {
 				fishAndFarmConfig.save();

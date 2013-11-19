@@ -7,6 +7,7 @@ public class FishAndFarmConfig {
 	public static final int DEFAULT_ID_ITEM_SEEDS = 7002;
 	public static final int DEFAULT_ID_ITEM_FRYINGPAN = 7003;
 	public static final int DEFAULT_ID_ITEM_IRONFISHINGROD = 7004;
+	public static final int DEFAULT_ID_ITEM_FISH = 7005;
 	
 	public static final int DEFAULT_ID_BLOCK_LETTUCE = 2000;
 	public static final int DEFAULT_ID_BLOCK_TOMATO = 2001;

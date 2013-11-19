@@ -16,6 +16,7 @@ public class ModInfo {
 	public static final String UNLOC_NAME_ITEM_SEEDS = "seeds";
 	public static final String UNLOC_NAME_ITEM_FRYINGPAN = "fryingPan";
 	public static final String UNLOC_NAME_ITEM_IRONFISHINGROD = "ironFishingRod";
+	public static final String UNLOC_NAME_ITEM_FISH = "fish";
 	
 	// Blocks 
 	public static final String UNLOC_NAME_BLOCK_LETTUCE = "lettuceCrop";
