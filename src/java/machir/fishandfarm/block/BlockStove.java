@@ -359,16 +359,6 @@ public class BlockStove extends BlockContainer {
             return MathHelper.floor_float(outputStrength * 14.0F) + (filledSlots > 0 ? 1 : 0);
         }
     }
-	
-	/**
-	 * Returns the unlocalized name
-	 * 
-	 * @param itemstack The corresponding itemstack
-	 */
-	@Override
-	public String getUnlocalizedName() {		
-		return ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_STOVE;
-	}
     
     /**
      * return a new tile entity stove, used to add a tile entity to the block

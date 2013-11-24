@@ -22,6 +22,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -41,7 +42,7 @@ public class TileEntitySmoker extends TileEntity implements ISidedInventory {
     
     public TileEntitySmoker()
     {
-    	// 9 Slots, 1 fuel, 4 food
+    	// 5 Slots, 1 fuel, 4 food
     	smokerItemStacks = new ItemStack[5];
         
     	smokerBurnTime = 0;
@@ -131,7 +132,7 @@ public class TileEntitySmoker extends TileEntity implements ISidedInventory {
     @Override
     public String getInvName()
     {
-        return Localization.get(ModInfo.MODID + ".tileentity." + ModInfo.UNLOC_NAME_TILEENTITY_SMOKER + ".inv_name");
+        return LanguageRegistry.instance().getStringLocalization(ModInfo.MODID + ".tileentity." + ModInfo.UNLOC_NAME_TILEENTITY_SMOKER + ".inv_name");
     }
 
     /**
@@ -206,7 +207,7 @@ public class TileEntitySmoker extends TileEntity implements ISidedInventory {
     }
 
     /**
-     * Returns true if the stove is currently burning
+     * Returns true if the smoker is currently burning
      */
     public boolean isBurning()
     {
@@ -234,7 +235,7 @@ public class TileEntitySmoker extends TileEntity implements ISidedInventory {
         	// If it's not burning but can process, try to use fuel
             if(smokerBurnTime == 0 && (canProcess(1) || canProcess(2)
      		 	   				   ||  canProcess(3) || canProcess(4))) {
-            	// Add the fuel to the stove
+            	// Add the fuel to the smoker
                 currentItemBurnTime = smokerBurnTime = getItemBurnTime(smokerItemStacks[0]);
                 if(smokerBurnTime > 0)
                 {
@@ -303,7 +304,7 @@ public class TileEntitySmoker extends TileEntity implements ISidedInventory {
      */
     private boolean canProcess(int slot)
     {
-    	// If the process slot or the tool slot is empty, return false
+    	// If the process slot is empty, return false
         if(smokerItemStacks[slot] == null) {
             return false;
         }

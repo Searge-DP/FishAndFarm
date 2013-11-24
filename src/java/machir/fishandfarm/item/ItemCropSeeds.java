@@ -136,8 +136,8 @@ public class ItemCropSeeds extends ItemSeeds {
 	@Override
     public String getUnlocalizedName(ItemStack itemStack)
     {
-		return "fishandfarm." + ModInfo.UNLOC_NAME_ITEM_SEEDS + ".name." + itemStack.getItemDamage();
-    }
+		return ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_SEEDS + "." + itemStack.getItemDamage();
+	}
 
     /**
      * Requests the type of plant

@@ -7,6 +7,7 @@ import machir.fishandfarm.ModInfo;
 import machir.fishandfarm.tileentity.TileEntityEmpty;
 import machir.fishandfarm.tileentity.TileEntitySmoker;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -25,7 +26,7 @@ public class BlockSmoker extends BlockContainer {
 	private Random smokerRand;
 	
 	public BlockSmoker(int id) {
-		super(id);
+		super(id, Material.wood);
 		this.setHardness(0.75F);
 		smokerRand = new Random();
         setCreativeTab(CreativeTabs.tabDecorations);
@@ -310,16 +311,6 @@ public class BlockSmoker extends BlockContainer {
             return MathHelper.floor_float(outputStrength * 14.0F) + (filledSlots > 0 ? 1 : 0);
         }
     }
-	
-	/**
-	 * Returns the unlocalized name
-	 * 
-	 * @param itemstack The corresponding itemstack
-	 */
-	@Override
-	public String getUnlocalizedName() {		
-		return ModInfo.MODID + "." + ModInfo.UNLOC_NAME_BLOCK_SMOKER;
-	}
 
 	/**
      * return a new tile entity stove, used to add a tile entity to the block

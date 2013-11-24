@@ -15,4 +15,5 @@ public class FishAndFarmConfig {
 	public static final int DEFAULT_ID_BLOCK_STOVE = 2003;
 	public static final int DEFAULT_ID_BLOCK_EMPTY = 2004;
 	public static final int DEFAULT_ID_BLOCK_SMOKER = 2005;
+	public static final int DEFAULT_ID_BLOCK_CAGE = 2006;
 }

@@ -25,18 +25,26 @@ public class ModInfo {
 	public static final String UNLOC_NAME_BLOCK_STOVE = "stove";
 	public static final String UNLOC_NAME_BLOCK_EMPTY = "empty";
 	public static final String UNLOC_NAME_BLOCK_SMOKER = "smoker";
+    public static final String UNLOC_NAME_BLOCK_CAGE = "cage";
 	
 	// Tile entities
 	public static final String UNLOC_NAME_TILEENTITY_STOVE = "stove";
 	public static final String UNLOC_NAME_TILEENTITY_SMOKER = "smoker";
+	public static final String UNLOC_NAME_TILEENTITY_CAGE = "cage";
 	
 	/** Resource locations **/ 
 	// Models
 	public static final ResourceLocation STOVE_MODEL_TEXTURE = new ResourceLocation(MODID + ":textures/models/stove.png");
 	public static final ResourceLocation FRYINGPAN_MODEL_TEXTURE = new ResourceLocation(MODID + ":textures/models/fryingPan.png");
 	public static final ResourceLocation SMOKER_MODEL_TEXTURE = new ResourceLocation(MODID + ":textures/models/smoker.png");
+	public static final ResourceLocation CAGE_MODEL_TEXTURE = new ResourceLocation(MODID + ":textures/models/cage.png");
 	
 	// Guis
-	public static final ResourceLocation STOVE_GUI_TEXTURE = new ResourceLocation(MODID + ":textures/gui/stove.png");
-	public static final ResourceLocation SMOKER_GUI_TEXTURE = new ResourceLocation(MODID + ":textures/gui/smoker.png");
+	public static final ResourceLocation STOVE_GUI_TEXTURE = new ResourceLocation(MODID + ":textures/guis/stove.png");
+	public static final ResourceLocation SMOKER_GUI_TEXTURE = new ResourceLocation(MODID + ":textures/guis/smoker.png");
+    public static final ResourceLocation CAGE_GUI_TEXTURE = new ResourceLocation(MODID + ":textures/guis/cage.png");
+    
+    // Entities
+    public static final ResourceLocation CAGE_BOBBER_TEXTURE = new ResourceLocation(MODID + ":textures/entities/cageBobber.png");
+    
 }

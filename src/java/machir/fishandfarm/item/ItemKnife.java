@@ -45,4 +45,16 @@ public class ItemKnife extends ItemFishAndFarm {
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", 1, 0));
         return multimap;
     }
+    
+    @Override
+    public ItemStack getContainerItemStack(ItemStack itemStack)
+    {
+        int newDamage = itemStack.getItemDamage() + 1;
+        if(newDamage >= itemStack.getMaxDamage())
+        {
+            return null;
+        }
+        itemStack.setItemDamage(newDamage);
+        return itemStack;
+    }
 }

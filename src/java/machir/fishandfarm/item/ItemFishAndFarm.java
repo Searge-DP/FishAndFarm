@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,13 +28,13 @@ public class ItemFishAndFarm extends Item {
      */
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List desc, boolean adv) {
-    	if (!Localization.get("fishandfarm." + this.getIconString() + ".desc").equals(
-    			"fishandfarm." + this.getIconString() + ".desc")) {
-    		String[] lines = Localization.get("fishandfarm." + this.getIconString() + ".desc").split("\n");
-    		for (String line : lines) {
-    			desc.add(line);
-    		}
-    	}
+        String localizedName = LanguageRegistry.instance().getStringLocalization("item." + ModInfo.MODID + "." + this.getUnlocalizedName() + ".desc");
+        if (!localizedName.equals("")) {
+            String[] lines = localizedName.split("\n");
+            for (String line : lines) {
+                desc.add(line);
+            }
+        }
     }
 	
 	/**
@@ -46,25 +47,5 @@ public class ItemFishAndFarm extends Item {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister register) {
 		this.itemIcon = register.registerIcon(ModInfo.MODID + ":" + this.getIconString());
-	}
-	
-	/**
-	 * Returns the unlocalized name
-	 * 
-	 * @param itemstack The corresponding itemstack
-	 */
-	@Override
-	public String getUnlocalizedName(ItemStack itemstack) {
-		return Localization.get(ModInfo.MODID + "." + this.getIconString() + ".name");
-	}
-	
-	/**
-	 * Returns the item name for display
-	 * 
-	 * @param itemstack The corresponding itemstack
-	 */
-	@Override
-	public String getItemDisplayName(ItemStack itemstack) {
-		return Localization.get(getUnlocalizedName(itemstack));
 	}
 }

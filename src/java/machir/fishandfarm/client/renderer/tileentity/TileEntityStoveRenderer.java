@@ -195,7 +195,7 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
             GL11.glPopMatrix();
             break;
         case INVENTORY:
-                // Start
+            // Start
 	        GL11.glPushMatrix();
 	        
 	        // Positioning
@@ -208,6 +208,31 @@ public class TileEntityStoveRenderer extends TileEntitySpecialRenderer implement
 	        GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
 	        
 	        // Render the stove
+            renderStove();
+            
+            // Stop the model render
+            GL11.glPopMatrix();
+            
+            // Stop
+            GL11.glPopMatrix();
+            break;
+        case EQUIPPED_FIRST_PERSON:
+            // Start
+            GL11.glPushMatrix();
+            
+            // Re-scale for 1st person
+            GL11.glScalef(1.0F, 1.0F, 1.0F);
+            
+            // Positioning
+            GL11.glTranslatef(1.0F, 1.6F, 1.0F);
+            
+            // Start the model render
+            GL11.glPushMatrix();
+            
+            // Rotation
+            GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+            
+            // Render the stove
             renderStove();
             
             // Stop the model render

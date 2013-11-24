@@ -1,31 +1,66 @@
 package machir.fishandfarm.item;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import machir.fishandfarm.ModInfo;
-import machir.fishandfarm.util.Localization;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.Icon;
+import net.minecraft.world.World;
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFish extends ItemFood {
     // Array of fish icons
     private Icon[] icons;
     
     // Array of fish names with their properties
-    private static String[] fishNames = {"fish", "carp", "tuna", "salmon", "carpFried", "tunaFried", "salmonFried"};
-    private static float[] saturation = {0.2F, 0.2F, 0.2F, 0.2F, 0.4F, 0.4F, 0.4F};
-    private static int[] healAmount = {2, 4, 4, 4, 7, 8, 11};
-    private static boolean[] wolfFav = {false, false, false, false, false, false, false};
+    private static String[] fishNames = {"fish", "fishCooked", "carp", "tuna", "salmon", "carpFried", "tunaFried", "salmonFried", "crab", "crabPeeled", "lobster", "lobsterPeeled", "carpSliced", "TunaSliced", "salmonSliced", "salmonSmoked"};
+    private static float[] saturation = {0.3F, 0.6F, 0.2F, 0.2F, 0.2F, 0.4F, 0.4F, 0.4F, 0.0F, 0.5F, 0.0F, 0.5F, 0.2F, 0.2F, 0.2F, 1.0F};
+    private static int[] healAmount = {2, 5, 4, 4, 4, 7, 8, 8, 0, 3, 0, 4, 4, 4, 4, 11};
+    private static boolean[] wolfFav = {false, false, false, false, false, false, false, false, false, false, false, false, false, false};
     
     public ItemFish(int id) {
         super(id);
     }
     
+    /**
+     * Add health and saturation depending on damage value
+     * 
+     * @param itemstack The eaten itemstack
+     * @param world The world
+     * @param entityPlayer The player entity
+     */
+    @Override
+    public ItemStack onEaten(ItemStack itemstack, World world, EntityPlayer entityPlayer) {
+        --itemstack.stackSize;
+        entityPlayer.getFoodStats().addStats(healAmount[itemstack.getItemDamage()], saturation[itemstack.getItemDamage()]);
+        applyPotionEffect(itemstack, world, entityPlayer);
+        world.playSoundAtEntity(entityPlayer, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+        return itemstack;
+    }
+    
+    /**
+     * Applies a corresponding potion effect if needed
+     */
+    @Override
+    public void applyPotionEffect(ItemStack itemstack, World world, EntityPlayer entityPlayer) {
+        switch (itemstack.getItemDamage()) {
+        case 7:
+        case 9:
+            entityPlayer.addPotionEffect(new PotionEffect(7, 1, 0));
+            break;
+        default:
+            break;
+        }
+    }
+        
     /**
      * Registers the sub-items
      * 
@@ -66,7 +101,7 @@ public class ItemFish extends ItemFood {
     @Override
     public String getUnlocalizedName(ItemStack itemStack)
     {
-        return "fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FISH + ".name." + itemStack.getItemDamage();
+        return "item." + ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FISH + "." + itemStack.getItemDamage();
     }
     
     /**
@@ -79,9 +114,9 @@ public class ItemFish extends ItemFood {
      */
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List desc, boolean adv) {
-        if (!Localization.get("fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FISH + ".desc." + itemStack.getItemDamage()).equals(
-                "fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FISH + ".desc." + itemStack.getItemDamage())) {
-            String[] lines = Localization.get("fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FISH + ".desc." + itemStack.getItemDamage()).split("\n");
+        String localizedName = LanguageRegistry.instance().getStringLocalization("item." + ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FISH + "." + itemStack.getItemDamage() + ".desc");
+        if (!localizedName.equals("")) {
+            String[] lines = localizedName.split("\\\\n");
             for (String line : lines) {
                 desc.add(line);
             }

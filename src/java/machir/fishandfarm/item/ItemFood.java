@@ -11,6 +11,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -57,9 +58,17 @@ public class ItemFood extends ItemFishAndFarm {
 	public ItemStack onEaten(ItemStack itemstack, World world, EntityPlayer entityPlayer) {
         --itemstack.stackSize;
         entityPlayer.getFoodStats().addStats(healAmount[itemstack.getItemDamage()], saturation[itemstack.getItemDamage()]);
+        applyPotionEffect(itemstack, world, entityPlayer);
         world.playSoundAtEntity(entityPlayer, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
         return itemstack;
     }
+	
+	/**
+	 * Applies a corresponding potion effect if needed
+	 */
+	public void applyPotionEffect(ItemStack itemstack, World world, EntityPlayer entityPlayer) {
+	    
+	}
 	
     /**
      * How long it takes to use or consume an item
@@ -111,13 +120,13 @@ public class ItemFood extends ItemFishAndFarm {
      */
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List desc, boolean adv) {
-    	if (!Localization.get("fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FOOD + ".desc." + itemStack.getItemDamage()).equals(
-    			"fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FOOD + ".desc." + itemStack.getItemDamage())) {
-    		String[] lines = Localization.get("fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FOOD + ".desc." + itemStack.getItemDamage()).split("\n");
-    		for (String line : lines) {
-    			desc.add(line);
-    		}
-    	}
+        String localizedName = LanguageRegistry.instance().getStringLocalization("item." + ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FOOD + "." + itemStack.getItemDamage() + ".desc");
+        if (!localizedName.equals("")) {
+            String[] lines = localizedName.split("\n");
+            for (String line : lines) {
+                desc.add(line);
+            }
+        }
     }
 	
 	/**
@@ -156,6 +165,6 @@ public class ItemFood extends ItemFishAndFarm {
 	@Override
     public String getUnlocalizedName(ItemStack itemStack)
     {
-		return "fishandfarm." + ModInfo.UNLOC_NAME_ITEM_FOOD + ".name." + itemStack.getItemDamage();
+		return "item." + ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_FOOD + "." + itemStack.getItemDamage();
     }
 }

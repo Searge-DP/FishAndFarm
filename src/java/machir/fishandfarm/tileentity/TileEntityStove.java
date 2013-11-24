@@ -26,6 +26,7 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -130,7 +131,7 @@ public class TileEntityStove extends TileEntity implements IInventory {
      */
     public String getInvName()
     {
-        return Localization.get(ModInfo.MODID + ".tileentity." + ModInfo.UNLOC_NAME_TILEENTITY_STOVE + ".inv_name");
+        return LanguageRegistry.instance().getStringLocalization(ModInfo.MODID + ".tileentity." + ModInfo.UNLOC_NAME_TILEENTITY_STOVE + ".inv_name");
     }
 
     /**

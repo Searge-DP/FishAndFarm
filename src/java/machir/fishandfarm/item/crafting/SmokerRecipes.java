@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 public class SmokerRecipes {
     public static ItemStack getResult(ItemStack itemstack)
     {
-        if(itemstack.itemID == Item.fishRaw.itemID)
+        if(itemstack.itemID == FishAndFarm.fish.itemID && itemstack.getItemDamage() == 14)
         {
-            return new ItemStack(Item.fishCooked.itemID, 1, 0);
+            return new ItemStack(FishAndFarm.fish, 1, 15);
         }
         else
         {

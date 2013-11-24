@@ -42,14 +42,4 @@ public class BlockFishAndFarm extends Block {
 	public void registerIcons(IconRegister register) {
 		this.blockIcon = register.registerIcon(ModInfo.MODID + ":" + this.getTextureName());
 	}	
-	
-	/**
-	 * Returns the unlocalized name
-	 * 
-	 * @param itemstack The corresponding itemstack
-	 */
-	@Override
-	public String getUnlocalizedName() {
-		return Localization.get(this.getTextureName());
-	}
 }

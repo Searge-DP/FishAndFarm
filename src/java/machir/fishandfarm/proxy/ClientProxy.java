@@ -1,10 +1,14 @@
 package machir.fishandfarm.proxy;
 
 import machir.fishandfarm.FishAndFarm;
+import machir.fishandfarm.client.renderer.entity.RenderCageBobber;
 import machir.fishandfarm.client.renderer.entity.RenderIronFishingHook;
+import machir.fishandfarm.client.renderer.tileentity.TileEntityCageRenderer;
 import machir.fishandfarm.client.renderer.tileentity.TileEntitySmokerRenderer;
 import machir.fishandfarm.client.renderer.tileentity.TileEntityStoveRenderer;
+import machir.fishandfarm.entity.EntityCageBobber;
 import machir.fishandfarm.entity.EntityIronFishHook;
+import machir.fishandfarm.tileentity.TileEntityCage;
 import machir.fishandfarm.tileentity.TileEntitySmoker;
 import machir.fishandfarm.tileentity.TileEntityStove;
 import net.minecraft.client.Minecraft;
@@ -28,8 +32,13 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmoker.class, new TileEntitySmokerRenderer());
 		MinecraftForgeClient.registerItemRenderer(FishAndFarm.smoker.blockID, new TileEntitySmokerRenderer());
 		
+        // Cage
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCage.class, new TileEntityCageRenderer());
+        MinecraftForgeClient.registerItemRenderer(FishAndFarm.cage.blockID, new TileEntityCageRenderer());
+		
 		/** Register Entity Renderers**/
 		RenderingRegistry.registerEntityRenderingHandler(EntityIronFishHook.class, new RenderIronFishingHook());
+		RenderingRegistry.registerEntityRenderingHandler(EntityCageBobber.class, new RenderCageBobber());
 	}
 	
 	@Override

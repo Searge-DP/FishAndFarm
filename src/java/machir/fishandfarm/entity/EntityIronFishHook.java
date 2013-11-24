@@ -557,8 +557,7 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
 
 	@Override
 	public void writeSpawnData(ByteArrayDataOutput data) {
-		if (this.angler != null)
-		{
+		if (this.angler != null) {
 			data.writeInt(this.angler.hashCode());
 		}
 	}
