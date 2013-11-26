@@ -21,7 +21,7 @@ public class ItemFish extends ItemFood {
     private Icon[] icons;
     
     // Array of fish names with their properties
-    private static String[] fishNames = {"fish", "fishCooked", "carp", "tuna", "salmon", "carpFried", "tunaFried", "salmonFried", "crab", "crabPeeled", "lobster", "lobsterPeeled", "carpSliced", "TunaSliced", "salmonSliced", "salmonSmoked"};
+    private static String[] fishNames = {"fish", "fishCooked", "carp", "tuna", "salmon", "carpFried", "tunaFried", "salmonFried", "crab", "crabPeeled", "lobster", "lobsterPeeled", "carpSliced", "tunaSliced", "salmonSliced", "salmonSmoked"};
     private static float[] saturation = {0.3F, 0.6F, 0.2F, 0.2F, 0.2F, 0.4F, 0.4F, 0.4F, 0.0F, 0.5F, 0.0F, 0.5F, 0.2F, 0.2F, 0.2F, 1.0F};
     private static int[] healAmount = {2, 5, 4, 4, 4, 7, 8, 8, 0, 3, 0, 4, 4, 4, 4, 11};
     private static boolean[] wolfFav = {false, false, false, false, false, false, false, false, false, false, false, false, false, false};

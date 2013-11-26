@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
+import java.io.InputStreamReader;
 import java.util.Properties;
-
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import java.util.logging.Logger;
 
 import machir.fishandfarm.proxy.CommonProxy;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 /**
  * Simple mod localization class.
@@ -46,7 +46,7 @@ public class Localization {
 		
 		try {
 			// Load the default language mappings
-		    langReader = new BufferedReader(new FileReader(Localization.class.getResource(path + default_language + ".properties").getFile()));
+		    langReader = new BufferedReader(new InputStreamReader(Localization.class.getResourceAsStream(path + default_language + ".properties")));
 			String line = "";
 			while ((line = langReader.readLine()) != null) {
 			    if (line.contains("=")) {

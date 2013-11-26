@@ -12,6 +12,7 @@ import machir.fishandfarm.block.BlockStrawberryCrop;
 import machir.fishandfarm.block.BlockTomatoCrop;
 import machir.fishandfarm.entity.EntityCageBobber;
 import machir.fishandfarm.entity.EntityIronFishHook;
+import machir.fishandfarm.entity.EntityIronFishHook.CatchEntry;
 import machir.fishandfarm.handler.BonemealHandler;
 import machir.fishandfarm.handler.NetworkHandler;
 import machir.fishandfarm.inventory.slot.SlotBait;
@@ -194,7 +195,7 @@ public class FishAndFarm {
 	@EventHandler
 	public void init(FMLInitializationEvent evt) {
 		// Load localizations
-		Localization.addLocalization("/lang/fishandfarm/", "en_US");
+		Localization.addLocalization("/lang/fishandfarm/", "en_US"); 
 		
 		// Register tile entities
 		GameRegistry.registerTileEntity(TileEntityStove.class, "tileEntityStove");
@@ -215,9 +216,9 @@ public class FishAndFarm {
 		CommonProxy.proxy.registerRenders();
 		
 		// Temporary add seeds to grass
-		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 0), 1);
-		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 1), 1);
-		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 2), 1);
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 0), 6);
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 1), 3);
+		MinecraftForge.addGrassSeed(new ItemStack(seeds, 1, 2), 4);
 		
 		// Add in fish, not sure yet if I want to keep it like this
 		SlotFish.addAllowedFish(new ItemStack(FishAndFarm.fish, 1, 14));
@@ -226,6 +227,13 @@ public class FishAndFarm {
 		SlotBait.addAllowedBait(new ItemStack(Item.beefRaw));
 		SlotBait.addAllowedBait(new ItemStack(Item.porkRaw));
 		SlotBait.addAllowedBait(new ItemStack(Item.chickenRaw));
+		
+		// Add catchables
+		EntityIronFishHook.catchList.add(new CatchEntry(new ItemStack(Item.bootsLeather), 40));
+		EntityIronFishHook.catchList.add(new CatchEntry(new ItemStack(FishAndFarm.fish, 1, 0), 30));
+		EntityIronFishHook.catchList.add(new CatchEntry(new ItemStack(FishAndFarm.fish, 1, 2), 10));
+		EntityIronFishHook.catchList.add(new CatchEntry(new ItemStack(FishAndFarm.fish, 1, 3), 10));
+		EntityIronFishHook.catchList.add(new CatchEntry(new ItemStack(FishAndFarm.fish, 1, 4), 10));
 	}
 	
 	@EventHandler

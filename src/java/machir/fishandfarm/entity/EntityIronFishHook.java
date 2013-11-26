@@ -1,5 +1,6 @@
 package machir.fishandfarm.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import machir.fishandfarm.FishAndFarm;
@@ -18,6 +19,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.WeightedRandomItem;
 import net.minecraft.world.World;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -28,6 +31,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityIronFishHook extends EntityFishHook implements IEntityAdditionalSpawnData {
+    /** Catchables **/
+    public static final List<CatchEntry> catchList = new ArrayList<CatchEntry>();
+    
     /** The tile this entity is on, X position */
     private int xTile;
 
@@ -64,6 +70,16 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
     @SideOnly(Side.CLIENT)
     private double velocityZ;
 
+    public static class CatchEntry extends WeightedRandomItem
+    {
+        public final ItemStack drop;
+        public CatchEntry(ItemStack drop, int weight)
+        {
+            super(weight);
+            this.drop = drop;
+        }
+    }
+    
     public EntityIronFishHook(World world)
     {
         super(world);
@@ -389,11 +405,11 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
                     }
                     else
                     {
-                        short short1 = 500;
+                        short short1 = 200;
 
                         if (this.worldObj.canLightningStrikeAt(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) + 1, MathHelper.floor_double(this.posZ)))
                         {
-                            short1 = 300;
+                            short1 = 100;
                         }
 
                         if (this.rand.nextInt(short1) == 0)
@@ -448,27 +464,29 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
-    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
+    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
-        par1NBTTagCompound.setShort("xTile", (short)this.xTile);
-        par1NBTTagCompound.setShort("yTile", (short)this.yTile);
-        par1NBTTagCompound.setShort("zTile", (short)this.zTile);
-        par1NBTTagCompound.setByte("inTile", (byte)this.inTile);
-        par1NBTTagCompound.setByte("shake", (byte)this.shake);
-        par1NBTTagCompound.setByte("inGround", (byte)(this.inGround ? 1 : 0));
+        nbttagcompound.setShort("xTile", (short)this.xTile);
+        nbttagcompound.setShort("yTile", (short)this.yTile);
+        nbttagcompound.setShort("zTile", (short)this.zTile);
+        nbttagcompound.setByte("inTile", (byte)this.inTile);
+        nbttagcompound.setByte("shake", (byte)this.shake);
+        nbttagcompound.setByte("inGround", (byte)(this.inGround ? 1 : 0));
+        nbttagcompound.setByte("anglerID", (byte)this.angler.hashCode());
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
+    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
-        this.xTile = par1NBTTagCompound.getShort("xTile");
-        this.yTile = par1NBTTagCompound.getShort("yTile");
-        this.zTile = par1NBTTagCompound.getShort("zTile");
-        this.inTile = par1NBTTagCompound.getByte("inTile") & 255;
-        this.shake = par1NBTTagCompound.getByte("shake") & 255;
-        this.inGround = par1NBTTagCompound.getByte("inGround") == 1;
+        this.xTile = nbttagcompound.getShort("xTile");
+        this.yTile = nbttagcompound.getShort("yTile");
+        this.zTile = nbttagcompound.getShort("zTile");
+        this.inTile = nbttagcompound.getByte("inTile") & 255;
+        this.shake = nbttagcompound.getByte("shake") & 255;
+        this.inGround = nbttagcompound.getByte("inGround") == 1;
+        this.angler = (EntityPlayer) worldObj.getEntityByID(nbttagcompound.getByte("anglerID"));
     }
 
     @SideOnly(Side.CLIENT)
@@ -501,20 +519,7 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
             }
             else if (this.ticksCatchable > 0)
             {
-            	ItemStack catchedItemStack = null;
-            	
-            	int catchChance = this.worldObj.rand.nextInt(100) + 1;
-            	if (catchChance > 60) {
-            		catchedItemStack = new ItemStack(Item.fishRaw);
-            	} else if (catchChance > 50) {
-            	    catchedItemStack = new ItemStack(FishAndFarm.fish, 1, 0);
-            	} else if (catchChance > 40) {
-            	    catchedItemStack = new ItemStack(FishAndFarm.fish, 1, 1);
-            	} else if (catchChance > 30) {
-            	    catchedItemStack = new ItemStack(FishAndFarm.fish, 1, 2);
-            	} else {
-            		catchedItemStack = new ItemStack(Item.bootsLeather);
-            	}
+            	ItemStack catchedItemStack = getCatch();
             	
             	EntityItem entityitem = new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, catchedItemStack);
                 double d5 = this.angler.posX - this.posX;
@@ -540,6 +545,16 @@ public class EntityIronFishHook extends EntityFishHook implements IEntityAdditio
             this.angler.fishEntity = null;
             return b0;
         }
+    }
+    
+    public ItemStack getCatch()
+    {
+        CatchEntry entry = (CatchEntry)WeightedRandom.getRandomItem(worldObj.rand, catchList);
+        if (entry == null || entry.drop == null)
+        {
+            return null;
+        }
+        return entry.drop.copy();
     }
 
     /**

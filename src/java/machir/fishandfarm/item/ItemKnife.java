@@ -19,6 +19,17 @@ public class ItemKnife extends ItemFishAndFarm {
 		this.setMaxDamage(this.maxUses);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.bFull3D = true;
+        this.setContainerItem(this);
+	}
+	
+	
+    /**
+     * If this returns true, after a recipe involving this item is crafted the container item will be added to the
+     * player's inventory instead of remaining in the crafting grid.
+     */
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack itemStack) {
+	    return false;
 	}
 	
     /**
@@ -50,10 +61,6 @@ public class ItemKnife extends ItemFishAndFarm {
     public ItemStack getContainerItemStack(ItemStack itemStack)
     {
         int newDamage = itemStack.getItemDamage() + 1;
-        if(newDamage >= itemStack.getMaxDamage())
-        {
-            return null;
-        }
         itemStack.setItemDamage(newDamage);
         return itemStack;
     }
