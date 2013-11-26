@@ -22,7 +22,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class TileEntityCage extends TileEntity implements ISidedInventory {
     // The cage duration
-    private static final int MIN_CAGE_DURATION = 8000;
+    private static final int MIN_CAGE_DURATION = 800;
     private static final int MAX_CAGE_DURATION = 1200;
     
     // The itemStacks inside

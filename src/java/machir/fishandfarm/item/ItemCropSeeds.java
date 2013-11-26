@@ -127,17 +127,6 @@ public class ItemCropSeeds extends ItemSeeds {
 	public Icon getIconFromDamage(int damage) {
 		return damage < icons.length ? icons[damage] : null;
 	}
-	
-	/**
-	 * Returns the unlocalized name of the itemstack
-	 * 
-	 * @param itemstack The corresponding itemstack
-	 */
-	@Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
-		return ModInfo.MODID + "." + ModInfo.UNLOC_NAME_ITEM_SEEDS + "." + itemStack.getItemDamage();
-	}
 
     /**
      * Requests the type of plant

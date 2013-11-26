@@ -173,6 +173,9 @@ public class FishAndFarm {
             GameRegistry.addShapelessRecipe(new ItemStack(fish, 1, 12), new Object[]{ new ItemStack(fish, 1, 2), new ItemStack(knife, 1, OreDictionary.WILDCARD_VALUE)});
             GameRegistry.addShapelessRecipe(new ItemStack(fish, 1, 13), new Object[]{ new ItemStack(fish, 1, 3), new ItemStack(knife, 1, OreDictionary.WILDCARD_VALUE)});
             GameRegistry.addShapelessRecipe(new ItemStack(fish, 1, 14), new Object[]{ new ItemStack(fish, 1, 4), new ItemStack(knife, 1, OreDictionary.WILDCARD_VALUE)});
+            GameRegistry.addShapelessRecipe(new ItemStack(fish, 1, 12), new Object[]{ new ItemStack(fish, 1, 2), new ItemStack(knife, 1, OreDictionary.WILDCARD_VALUE)});
+            GameRegistry.addShapelessRecipe(new ItemStack(fish, 1, 9), new Object[]{ new ItemStack(fish, 1, 8), new ItemStack(knife, 1, OreDictionary.WILDCARD_VALUE)});
+            GameRegistry.addShapelessRecipe(new ItemStack(fish, 1, 11), new Object[]{ new ItemStack(fish, 1, 10), new ItemStack(knife, 1, OreDictionary.WILDCARD_VALUE)});
             
             // Remove cooked fish and change the recipe of cooked fish
             Item.itemsList[Item.fishCooked.itemID] = null;

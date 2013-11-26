@@ -32,11 +32,11 @@ public class BlockEmpty extends BlockContainer {
     	
     	if (tileEntityEmpty != null) {
     		world.setBlockToAir(tileEntityEmpty.coreX, tileEntityEmpty.coreY, tileEntityEmpty.coreZ);
-    		
     		int coreBlockID = world.getBlockId(tileEntityEmpty.coreX, tileEntityEmpty.coreY, tileEntityEmpty.coreZ);
     		int coreBlockMetadata = world.getBlockMetadata(tileEntityEmpty.coreX, tileEntityEmpty.coreY, tileEntityEmpty.coreZ);
     		if (coreBlockID != 0) {
     			Block.blocksList[coreBlockID].dropBlockAsItem(world, tileEntityEmpty.coreX, tileEntityEmpty.coreY, tileEntityEmpty.coreZ, coreBlockMetadata, 0);
+    			Block.blocksList[coreBlockID].breakBlock(world, tileEntityEmpty.coreX, tileEntityEmpty.coreY, tileEntityEmpty.coreZ, coreBlockID, coreBlockMetadata);
     		}
     		
     		world.removeBlockTileEntity(tileEntityEmpty.coreX, tileEntityEmpty.coreY, tileEntityEmpty.coreZ);
